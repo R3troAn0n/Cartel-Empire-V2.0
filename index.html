@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARTEL EMPIRE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --panel: #111111;
+    --panel2: #161616;
+    --border: #2a2a2a;
+    --accent: #c8a227;
+    --accent2: #e63946;
+    --green: #2ecc71;
+    --red: #e63946;
+    --blue: #4fc3f7;
+    --purple: #9b59b6;
+    --text: #e0e0e0;
+    --muted: #666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse at 20% 0%, rgba(200,162,39,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(230,57,70,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  #header {
+    background: linear-gradient(180deg, #1a1a1a, #0a0a0a);
+    border-bottom: 2px solid var(--accent);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  #header h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(200,162,39,0.5);
+    flex-shrink: 0;
+  }
+
+  .stat-bar {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    min-width: 80px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .stat-value {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.blue { color: var(--blue); }
+  .stat-value.purple { color: var(--purple); }
+
+  /* NAV */
+  #nav {
+    display: flex;
+    gap: 2px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* MAIN */
+  #main {
+    padding: 16px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* PANELS */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .panel-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* BUTTONS */
+  .btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+  }
+
+  .btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(200,162,39,0.08);
+  }
+
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn-accent:hover:not(:disabled) {
+    background: #e8b800;
+    color: #000;
+  }
+
+  .btn-red {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .btn-red:hover:not(:disabled) {
+    background: rgba(230,57,70,0.15);
+  }
+
+  .btn-green {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .btn-green:hover:not(:disabled) {
+    background: rgba(46,204,113,0.15);
+  }
+
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  /* DRUG CARDS */
+  .drug-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .drug-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .drug-card[data-tier="1"]::before { background: var(--green); }
+  .drug-card[data-tier="2"]::before { background: var(--blue); }
+  .drug-card[data-tier="3"]::before { background: var(--purple); }
+  .drug-card[data-tier="4"]::before { background: var(--accent); }
+  .drug-card[data-tier="5"]::before { background: var(--red); }
+
+  .drug-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .drug-price {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .drug-info {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .drug-stock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .price-change {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .price-change.up { color: var(--green); }
+  .price-change.down { color: var(--red); }
+
+  /* MARKET CONTROLS */
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .qty-control input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    padding: 4px 8px;
+    width: 70px;
+    text-align: center;
+  }
+
+  .qty-control label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* CREW CARDS */
+  .crew-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .crew-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .crew-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .crew-count {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* PROPERTY CARDS */
+  .property-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 14px;
+  }
+
+  .property-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .property-income {
+    color: var(--green);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .property-desc {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .owned-badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.15);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* LOG */
+  #log {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 10px;
+    height: 160px;
+    overflow-y: auto;
+    font-size: 12px;
+    font-family: 'Rajdhani', monospace;
+  }
+
+  #log::-webkit-scrollbar { width: 4px; }
+  #log::-webkit-scrollbar-track { background: var(--bg); }
+  #log::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    line-height: 1.4;
+  }
+
+  .log-entry.good { color: var(--green); }
+  .log-entry.bad { color: var(--red); }
+  .log-entry.warn { color: var(--accent); }
+  .log-entry.info { color: var(--blue); }
+
+  /* PROGRESS BARS */
+  .bar-wrap {
+    background: var(--bg);
+    height: 6px;
+    position: relative;
+    overflow: hidden;
+    margin: 4px 0;
+  }
+
+  .bar-fill {
+    height: 100%;
+    transition: width 0.3s;
+  }
+
+  /* TOOLTIP */
+  .tooltip {
+    position: relative;
+    cursor: help;
+  }
+
+  .tooltip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 999;
+  }
+
+  .tooltip:hover::after { opacity: 1; }
+
+  /* LEVEL DISPLAY */
+  .level-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--panel2);
+    border: 1px solid var(--accent);
+    padding: 8px 14px;
+  }
+
+  .level-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 40px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .level-info { flex: 1; }
+  .level-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .xp-bar .bar-fill { background: var(--accent); }
+  .health-bar .bar-fill { background: var(--green); }
+  .heat-bar .bar-fill { background: var(--red); }
+  .loyalty-bar .bar-fill { background: var(--blue); }
+
+  /* MISSIONS */
+  .mission-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .mission-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+  }
+
+  .mission-info { flex: 1; }
+  .mission-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .mission-desc {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .mission-rewards {
+    font-size: 12px;
+    color: var(--green);
+  }
+
+  .mission-risk {
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 2px;
+  }
+
+  .mission-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+    width: 120px;
+  }
+
+  /* NOTIFICATIONS */
+  #notifications {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  .notif {
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    max-width: 280px;
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    pointer-events: none;
+  }
+
+  .notif.good { border-color: var(--green); }
+  .notif.bad { border-color: var(--red); }
+  .notif.warn { border-color: var(--accent); }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  /* TERRITORY MAP */
+  .territory-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .territory-cell {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 10px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .territory-cell:hover { border-color: var(--accent); }
+
+  .territory-cell.owned {
+    border-color: var(--green);
+    background: rgba(46,204,113,0.08);
+  }
+
+  .territory-cell.contested {
+    border-color: var(--red);
+    background: rgba(230,57,70,0.08);
+    animation: pulse 1.5s infinite;
+  }
+
+  .territory-cell.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(230,57,70,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(230,57,70,0); }
+  }
+
+  .territory-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .territory-income {
+    font-size: 11px;
+    color: var(--green);
+  }
+
+  .territory-ctrl {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* WEAPONS / UPGRADES */
+  .weapon-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .weapon-icon { font-size: 24px; }
+
+  .weapon-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* TICKER */
+  #ticker {
+    background: #1a1a1a;
+    border-bottom: 1px solid var(--border);
+    padding: 5px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 25s linear infinite;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
+  }
+
+  .ticker-item { margin-right: 40px; }
+  .ticker-item.up { color: var(--green); }
+  .ticker-item.down { color: var(--red); }
+
+  /* TIMER DISPLAY */
+  .game-timer {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* COMBAT SYSTEM */
+  .target-card {
+    background: var(--panel2);
+    border: 2px solid var(--border);
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .target-card:hover { border-color: var(--red); background: rgba(230,57,70,0.06); }
+  .target-card.selected { border-color: var(--red); background: rgba(230,57,70,0.12); box-shadow: 0 0 12px rgba(230,57,70,0.3); }
+  .target-name { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+  .target-difficulty { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .diff-easy { color: var(--green); }
+  .diff-medium { color: var(--accent); }
+  .diff-hard { color: #ff6b35; }
+  .diff-extreme { color: var(--red); }
+  .target-reward { font-size: 12px; color: var(--green); }
+  .target-threat { font-size: 11px; color: var(--muted); }
+
+  .approach-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .approach-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .approach-btn.selected { border-color: var(--accent); background: rgba(200,162,39,0.12); color: var(--accent); }
+
+  .kill-entry {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    line-height: 1.5;
+    animation: fadeInSlide 0.4s ease;
+  }
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .kill-success { border-left: 3px solid var(--red); }
+  .kill-fail { border-left: 3px solid var(--muted); }
+  .kill-critical { border-left: 3px solid var(--accent); background: rgba(200,162,39,0.05); }
+  .kill-outcome-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .kill-outcome-desc { color: var(--muted); font-size: 11px; line-height: 1.4; }
+  .kill-rewards { font-size: 11px; margin-top: 3px; }
+
+  /* Combat flash overlay */
+  @keyframes combatFlash {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+  }
+  .combat-flash {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 9998;
+    animation: combatFlash 0.5s ease forwards;
+  }
+
+  .weapon-cat-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 1px 5px;
+    text-transform: uppercase;
+    border: 1px solid;
+    margin-bottom: 4px;
+  }
+  .cat-pistol { color: #aaa; border-color: #555; }
+  .cat-shotgun { color: #ff8c42; border-color: #ff8c42; }
+  .cat-smg { color: #4fc3f7; border-color: #4fc3f7; }
+  .cat-rifle { color: #2ecc71; border-color: #2ecc71; }
+  .cat-sniper { color: #9b59b6; border-color: #9b59b6; }
+  .cat-heavy { color: #e63946; border-color: #e63946; }
+  .cat-gear { color: #c8a227; border-color: #c8a227; }
+
+  .stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    padding: 1px 5px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin: 1px;
+    white-space: nowrap;
+  }
+
+  .silenced-badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.12);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 4px;
+    letter-spacing: 1px;
+  }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 500px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    #header { flex-wrap: wrap; }
+  }
+
+  /* PRESTIGE */
+  .prestige-card {
+    background: linear-gradient(135deg, rgba(200,162,39,0.1), rgba(200,162,39,0.02));
+    border: 1px solid var(--accent);
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .prestige-icon { font-size: 48px; margin-bottom: 8px; }
+
+  /* STATUS EFFECTS */
+  .status-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  .badge-wanted { color: var(--red); border-color: var(--red); background: rgba(230,57,70,0.1); }
+  .badge-protected { color: var(--green); border-color: var(--green); background: rgba(46,204,113,0.1); }
+  .badge-laundering { color: var(--accent); border-color: var(--accent); background: rgba(200,162,39,0.1); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  select, input {
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+  .info-row .label { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+  .info-row .value { color: var(--text); font-weight: 600; }
+
+  /* Manufacture */
+  .recipe-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 12px;
+  }
+  .recipe-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .ingredient {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 2px 0;
+  }
+  .ingredient.have { color: var(--text); }
+  .ingredient.missing { color: var(--red); }
+
+</style>
+</head>
+<body>
+
+<div id="notifications"></div>
+
+<div id="ticker">
+  <span class="ticker-inner" id="tickerText"></span>
+</div>
+
+<div id="header">
+  <h1>⚡ CARTEL</h1>
+  <div class="stat-bar">
+    <div class="stat-item">
+      <span class="stat-label">💰 Cash</span>
+      <span class="stat-value green" id="statCash">$500</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">🏦 Bank</span>
+      <span class="stat-value green" id="statBank">$0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">⭐ Respect</span>
+      <span class="stat-value purple" id="statRespect">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">📊 Level</span>
+      <span class="stat-value" id="statLevel">1</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">🌡️ Heat</span>
+      <span class="stat-value red" id="statHeat">0%</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">💊 Inventory</span>
+      <span class="stat-value blue" id="statInventory">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">👥 Crew</span>
+      <span class="stat-value" id="statCrew">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">🕐 Day</span>
+      <span class="stat-value" id="statDay">1</span>
+    </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn active" onclick="showTab('street')">🏪 Street Market</button>
+  <button class="nav-btn" onclick="showTab('manufacture')">🔬 Lab</button>
+  <button class="nav-btn" onclick="showTab('territory')">🗺️ Territory</button>
+  <button class="nav-btn" onclick="showTab('crew')">👥 Crew</button>
+  <button class="nav-btn" onclick="showTab('missions')">⚡ Missions</button>
+  <button class="nav-btn" onclick="showTab('properties')">🏢 Properties</button>
+  <button class="nav-btn" onclick="showTab('weapons')">🔫 Arsenal</button>
+  <button class="nav-btn" onclick="showTab('combat')">⚔️ Combat</button>
+  <button class="nav-btn" onclick="showTab('launder')">🏦 Laundry</button>
+  <button class="nav-btn" onclick="showTab('profile')">👤 Profile</button>
+  <button class="nav-btn" onclick="showTab('vehicles')">🚗 Vehicles</button>
+  <button class="nav-btn" onclick="showTab('vip')" style="color:#9b59b6;border-bottom:3px solid transparent" id="navVip">⭐ VIP</button>
+</div>
+
+<div id="main">
+
+  <!-- STREET MARKET -->
+  <div id="tab-street" class="tab-content active">
+    <div class="grid-2">
+      <div>
+        <div class="panel">
+          <div class="panel-title">📈 Market Prices — Tick in <span id="marketCountdown">30s</span></div>
+          <div id="drugGrid" class="grid-2"></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">🎒 Your Inventory</div>
+          <div id="inventoryDisplay"></div>
+          <div style="margin-top:12px">
+            <div class="panel-title" style="margin-top:8px">📋 Activity Log</div>
+            <div id="log"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAB -->
+  <div id="tab-manufacture" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🔬 Production Lab — Level <span id="labLevel">1</span></div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Manufacture drugs from raw materials. Higher lab level = better yield & more recipes unlocked.</p>
+      <div id="labRecipes" class="grid-3"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🧪 Raw Materials</div>
+      <div id="rawMaterials" class="grid-4"></div>
+      <div style="margin-top:12px">
+        <button class="btn btn-accent" onclick="buySupplies()" style="width:auto;padding:8px 24px">Buy Supply Bundle — $<span id="supplyBundleCost">200</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRITORY -->
+  <div id="tab-territory" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🗺️ Territory Control — <span id="ownedTerritories">0</span>/20 Owned</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Control territories to earn passive income every game day. Some territories are contested — fight to defend them!</p>
+      <div class="territory-grid" id="territoryGrid"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">💰 Territory Income — Next payout: <span id="incomeCountdown">60s</span></div>
+      <div id="territoryIncome"></div>
+    </div>
+  </div>
+
+  <!-- CREW -->
+  <div id="tab-crew" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">👥 Hire Crew Members</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Your crew earns you income, protects your operation, and fights your wars. Pay weekly wages.</p>
+      <div id="crewHire" class="grid-3"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">📋 Current Roster</div>
+      <div id="crewRoster"></div>
+      <div class="info-row" style="margin-top:8px">
+        <span class="label">Weekly Wages</span>
+        <span class="value red" id="weeklyWages">$0/day</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Total Firepower</span>
+        <span class="value" id="totalFirepower">0</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Total Defense</span>
+        <span class="value" id="totalDefense">0</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Crew Loyalty</span>
+        <span class="value blue" id="crewLoyalty">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSIONS -->
+  <div id="tab-missions" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">⚡ Available Missions</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Complete missions to earn cash, XP, and respect. Risk vs. reward — higher difficulty = bigger payout.</p>
+      <div id="missionList"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">✅ Completed Missions</div>
+      <div id="completedMissions" style="color:var(--muted);font-size:12px"></div>
+    </div>
+  </div>
+
+  <!-- PROPERTIES -->
+  <div id="tab-properties" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🏢 Properties & Businesses</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Own businesses to generate passive income and launder drug money.</p>
+      <div id="propertyList" class="grid-3"></div>
+    </div>
+  </div>
+
+  <!-- WEAPONS -->
+  <div id="tab-weapons" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🔫 Arms Dealer — Black Market</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Purchase firearms, explosives, and protective gear. All weapons add firepower to your crew and affect combat outcomes.</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="filterWeapons('all')" id="wf-all" style="width:auto;border-color:var(--accent);color:var(--accent)">All</button>
+        <button class="btn btn-sm" onclick="filterWeapons('pistol')" id="wf-pistol" style="width:auto">Pistols</button>
+        <button class="btn btn-sm" onclick="filterWeapons('rifle')" id="wf-rifle" style="width:auto">Rifles</button>
+        <button class="btn btn-sm" onclick="filterWeapons('shotgun')" id="wf-shotgun" style="width:auto">Shotguns</button>
+        <button class="btn btn-sm" onclick="filterWeapons('smg')" id="wf-smg" style="width:auto">SMGs</button>
+        <button class="btn btn-sm" onclick="filterWeapons('sniper')" id="wf-sniper" style="width:auto">Snipers</button>
+        <button class="btn btn-sm" onclick="filterWeapons('heavy')" id="wf-heavy" style="width:auto">Heavy</button>
+        <button class="btn btn-sm" onclick="filterWeapons('gear')" id="wf-gear" style="width:auto">Gear</button>
+      </div>
+      <div id="weaponList" class="grid-4"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🛡️ Current Arsenal</div>
+      <div id="ownedWeapons"></div>
+    </div>
+  </div>
+
+  <!-- COMBAT -->
+  <div id="tab-combat" class="tab-content">
+    <div class="grid-2">
+      <div>
+        <div class="panel">
+          <div class="panel-title">⚔️ Combat Operations</div>
+          <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Select a target and weapon, then execute the hit. Outcome depends on your firepower, chosen weapon, target type, and circumstances.</p>
+          <div style="margin-bottom:12px">
+            <div class="panel-title" style="font-size:13px;margin-bottom:8px">🎯 SELECT TARGET</div>
+            <div id="targetList" class="grid-2"></div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="panel-title" style="font-size:13px;margin-bottom:8px">🔫 SELECT WEAPON</div>
+            <select id="combatWeaponSelect" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:Rajdhani;font-size:14px;width:100%">
+              <option value="">-- Choose Equipped Weapon --</option>
+            </select>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="panel-title" style="font-size:13px;margin-bottom:8px">🕵️ APPROACH</div>
+            <div id="approachList" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+          </div>
+          <button class="btn btn-red" id="executeHitBtn" onclick="executeKill()" style="font-size:16px;padding:12px;letter-spacing:3px">EXECUTE HIT</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">📊 Combat Stats</div>
+          <div id="combatStats"></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">💀 Kill Feed</div>
+          <div id="killFeed" style="height:300px;overflow-y:auto;font-size:12px;font-family:Rajdhani,monospace"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🩸 Active Combat Events</div>
+          <div id="activeCombatEvents" style="font-size:12px;color:var(--muted)">No ongoing conflicts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAUNDER -->
+  <div id="tab-launder" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🏦 Money Laundering</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Clean dirty drug money through your businesses. Bank your clean money to keep it safe from police raids.</p>
+      <div class="grid-2">
+        <div>
+          <div class="info-row">
+            <span class="label">💵 Cash (Dirty)</span>
+            <span class="value green" id="launderCash">$0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">🏦 Bank (Clean)</span>
+            <span class="value green" id="launderBank">$0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">🧹 Launder Rate</span>
+            <span class="value" id="launderRate">10%</span>
+          </div>
+          <div class="info-row">
+            <span class="label">💸 Max Per Day</span>
+            <span class="value" id="launderMax">$1,000</span>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <input type="number" id="launderAmount" placeholder="Amount" style="background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;font-family:Rajdhani;width:120px">
+            <button class="btn btn-green btn-sm" onclick="launderMoney()">Launder</button>
+            <button class="btn btn-sm" onclick="depositAll()">Deposit All</button>
+          </div>
+        </div>
+        <div>
+          <div class="panel-title">📊 Launder Upgrades</div>
+          <div id="launderUpgrades"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🚨 Police Activity</div>
+      <div id="policePanel"></div>
+    </div>
+  </div>
+
+  <!-- VEHICLES -->
+  <div id="tab-vehicles" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">🚗 Vehicle Fleet — Own rides for bonuses & status</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Vehicles boost escape chances, drug transport capacity, and street respect. Active vehicle shown in bold.</p>
+      <div id="vehicleList" class="grid-4"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🔑 Active Vehicle</div>
+      <div id="activeVehicleDisplay"></div>
+    </div>
+  </div>
+
+  <!-- VIP -->
+  <div id="tab-vip" class="tab-content">
+    <div class="panel" style="background:linear-gradient(135deg,#1a0a2e,#0d0a1a);border-color:#9b59b6">
+      <div class="panel-title" style="color:#9b59b6;font-size:20px">⭐ VIP PREMIUM ACCESS</div>
+      <p style="color:#b39ddb;font-size:13px;margin-bottom:14px">Enter your exclusive VIP key to unlock premium items, secret vehicles, black market bonuses, and powerful perks unavailable anywhere else in the game.</p>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <input type="text" id="vipKeyInput" placeholder="Enter VIP Key..." style="background:#1a1a2e;border:1px solid #9b59b6;color:#e0e0e0;padding:8px 14px;font-family:Rajdhani;font-size:15px;width:240px;letter-spacing:2px">
+        <button class="btn" onclick="activateVIP()" style="border-color:#9b59b6;color:#9b59b6;width:auto;padding:8px 20px">🔑 ACTIVATE</button>
+      </div>
+      <div id="vipStatusMsg" style="font-size:13px;color:var(--muted)">Status: Not activated. Purchase key: <b style="color:#c8a227">CartelSim2627</b></div>
+    </div>
+    <div id="vipLockedMsg" class="panel" style="text-align:center;padding:30px">
+      <div style="font-size:48px;margin-bottom:10px">🔒</div>
+      <div style="font-family:Oswald,sans-serif;font-size:20px;color:var(--muted);letter-spacing:2px">VIP KEY REQUIRED</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:8px">Purchase the key <b style="color:#c8a227">CartelSim2627</b> to unlock all VIP content including exclusive vehicles, secret missions, black-market weapons, and powerful perks.</div>
+    </div>
+    <div id="vipContent" style="display:none">
+      <div class="panel" style="background:linear-gradient(135deg,#1a0a2e,#0d0a1a);border-color:#9b59b6;margin-bottom:12px">
+        <div class="panel-title" style="color:#9b59b6">✨ VIP STATUS ACTIVE</div>
+        <div id="vipLevelDisplay"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color:#9b59b6">🎁 VIP EXCLUSIVE ITEMS</div>
+        <p style="color:var(--muted);font-size:12px;margin-bottom:12px">These items are only available to VIP members. Each claim costs VIP Points earned by playing.</p>
+        <div id="vipItemsGrid" class="grid-3"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color:#9b59b6">⚡ VIP LEVEL PERKS</div>
+        <div id="vipPerksDisplay"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="tab-profile" class="tab-content">
+    <div class="grid-2">
+      <div>
+        <div class="panel">
+          <div class="panel-title">👤 Cartel Boss Profile</div>
+          <div class="level-display">
+            <div class="level-num" id="profileLevel">1</div>
+            <div class="level-info">
+              <div class="level-title" id="levelTitle">Street Dealer</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">XP: <span id="profileXP">0</span> / <span id="profileXPNeeded">1000</span></div>
+              <div class="bar-wrap xp-bar"><div class="bar-fill" id="xpBar" style="width:0%;background:var(--accent)"></div></div>
+            </div>
+          </div>
+          <br>
+          <div class="info-row">
+            <span class="label">🏆 Respect</span>
+            <span class="value purple" id="profileRespect">0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">💀 Rivals Eliminated</span>
+            <span class="value" id="profileKills">0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">💊 Total Drugs Sold</span>
+            <span class="value" id="profileDrugsSold">0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">💰 Total Earnings</span>
+            <span class="value green" id="profileEarnings">$0</span>
+          </div>
+          <div class="info-row">
+            <span class="label">🌡️ Heat Level</span>
+            <span class="value red" id="profileHeat">0%</span>
+          </div>
+          <div class="info-row">
+            <span class="label">❤️ Health</span>
+            <span class="value" id="profileHealth">100/100</span>
+          </div>
+          <div class="bar-wrap health-bar" style="margin-top:4px">
+            <div class="bar-fill" id="healthBar" style="width:100%;background:var(--green)"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">🏅 Achievements</div>
+          <div id="achievements" style="font-size:12px;color:var(--muted)">Keep playing to unlock achievements...</div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">📊 Empire Stats</div>
+          <div id="empireStats"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">⬆️ Level Perks</div>
+          <div id="levelPerks" style="font-size:12px;color:var(--muted)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== GAME STATE =====
+const G = {
+  cash: 500,
+  bank: 0,
+  xp: 0,
+  level: 1,
+  respect: 0,
+  heat: 0,
+  health: 100,
+  maxHealth: 100,
+  day: 1,
+  totalEarnings: 0,
+  totalDrugsSold: 0,
+  totalManufactured: 0,
+  kills: 0,
+  bodyCount: 0,
+  crewLostInCombat: 0,
+  combatWins: 0,
+  combatLosses: 0,
+  headshotKills: 0,
+  silentKills: 0,
+  missionsDone: 0,
+  launderRate: 0.10,
+  launderMaxPerDay: 1000,
+  launderToday: 0,
+  labLevel: 1,
+  inventory: {},
+  rawMaterials: { precursors: 0, chemicals: 0, equipment: 0 },
+  crew: {},
+  ownedProperties: [],
+  ownedWeapons: {},
+  territories: {},
+  completedMissions: [],
+  achievements: [],
+  statusEffects: [],
+  // vehicles
+  ownedVehicles: ['bicycle'],
+  activeVehicle: 'bicycle',
+  // VIP
+  vipActive: false,
+  vipXP: 0,
+  vipLevel: 0,
+  vipOwnedItems: [],
+  // Combat state
+  selectedTarget: null,
+  selectedWeapon: null,
+  selectedApproach: 'direct',
+  killFeedEntries: [],
+  activeCombatEvents: [],
+};
+
+// ===== DRUGS =====
+const DRUGS = [
+  { id: 'weed', name: 'Weed', emoji: '🌿', tier: 1, basePrice: 20, buyPrice: 8, desc: 'Basic starter product', maxStock: 200, riskMult: 0.5 },
+  { id: 'pills', name: 'Pills', emoji: '💊', tier: 1, basePrice: 35, buyPrice: 15, desc: 'Street pills, quick flip', maxStock: 150, riskMult: 0.7 },
+  { id: 'hash', name: 'Hash', emoji: '🟫', tier: 2, basePrice: 55, buyPrice: 22, desc: 'Concentrated cannabis', maxStock: 120, riskMult: 0.8 },
+  { id: 'crack', name: 'Crack', emoji: '🔸', tier: 2, basePrice: 80, buyPrice: 30, desc: 'High demand, high risk', maxStock: 100, riskMult: 1.2 },
+  { id: 'coke', name: 'Cocaine', emoji: '❄️', tier: 3, basePrice: 150, buyPrice: 55, desc: 'Premium white', maxStock: 80, riskMult: 1.5 },
+  { id: 'meth', name: 'Meth', emoji: '💎', tier: 3, basePrice: 120, buyPrice: 40, desc: 'Blue crystal, massive market', maxStock: 90, riskMult: 1.4 },
+  { id: 'heroin', name: 'Heroin', emoji: '💉', tier: 4, basePrice: 200, buyPrice: 75, desc: 'High risk, high reward', maxStock: 60, riskMult: 2.0 },
+  { id: 'mdma', name: 'MDMA', emoji: '🔴', tier: 3, basePrice: 130, buyPrice: 45, desc: 'Club drug, weekend rush', maxStock: 80, riskMult: 1.3 },
+  { id: 'lsd', name: 'LSD', emoji: '🌈', tier: 3, basePrice: 110, buyPrice: 38, desc: 'Tabs — easy to transport', maxStock: 100, riskMult: 1.1 },
+  { id: 'fentanyl', name: 'Fentanyl', emoji: '⚠️', tier: 5, basePrice: 500, buyPrice: 180, desc: 'Extremely dangerous, max profit', maxStock: 30, riskMult: 3.0 },
+  { id: 'shrooms', name: 'Shrooms', emoji: '🍄', tier: 2, basePrice: 65, buyPrice: 20, desc: 'Psychedelics, lower risk', maxStock: 110, riskMult: 0.9 },
+  { id: 'ketamine', name: 'Ketamine', emoji: '🔵', tier: 3, basePrice: 140, buyPrice: 50, desc: 'Special K — party scene', maxStock: 70, riskMult: 1.2 },
+];
+
+// Current market prices
+const marketPrices = {};
+DRUGS.forEach(d => { marketPrices[d.id] = d.basePrice + Math.floor(Math.random() * 20 - 10); });
+
+// ===== CREW =====
+const CREW_TYPES = [
+  { id: 'runner', name: 'Street Runner', emoji: '🏃', cost: 500, wage: 50, firepower: 1, defense: 0, income: 20, desc: 'Moves product on streets' },
+  { id: 'dealer', name: 'Corner Dealer', emoji: '💼', cost: 1200, wage: 100, firepower: 2, defense: 1, income: 60, desc: 'Dedicated drug corner' },
+  { id: 'guard', name: 'Bodyguard', emoji: '💪', cost: 2000, wage: 150, firepower: 4, defense: 8, income: 0, desc: 'Protects your person' },
+  { id: 'shooter', name: 'Shooter', emoji: '🔫', cost: 3000, wage: 200, firepower: 10, defense: 3, income: 0, desc: 'Eliminates rivals' },
+  { id: 'chemist', name: 'Chemist', emoji: '🧪', cost: 5000, wage: 400, firepower: 0, defense: 0, income: 150, desc: 'Boosts lab production' },
+  { id: 'lawyer', name: 'Corrupt Lawyer', emoji: '⚖️', cost: 8000, wage: 600, firepower: 0, defense: 0, income: 0, heatReduce: 5, desc: 'Reduces heat daily' },
+  { id: 'lookout', name: 'Lookout', emoji: '👁️', cost: 800, wage: 60, firepower: 1, defense: 2, income: 0, desc: 'Warns of police activity' },
+  { id: 'enforcer', name: 'Enforcer', emoji: '🗡️', cost: 6000, wage: 350, firepower: 15, defense: 5, income: 0, desc: 'Elite combat unit' },
+  { id: 'accountant', name: 'Accountant', emoji: '📊', cost: 4000, wage: 300, firepower: 0, defense: 0, income: 0, launderBonus: 0.05, desc: 'Improves laundering' },
+  { id: 'supplier', name: 'Drug Supplier', emoji: '📦', cost: 10000, wage: 800, firepower: 0, defense: 0, income: 300, discountDrugs: 0.1, desc: 'Bulk supply discounts' },
+];
+
+// ===== PROPERTIES =====
+const PROPERTIES = [
+  { id: 'safehouse', name: 'Safe House', emoji: '🏠', cost: 2000, incomePerDay: 0, heatReduce: 3, desc: 'Reduces police attention. Hides inventory.', perks: 'Heat -3/day, hide 50 units' },
+  { id: 'carwash', name: 'Car Wash', emoji: '🚗', cost: 5000, incomePerDay: 150, desc: 'Front business, launders money', launderBonus: 500 },
+  { id: 'restaurant', name: 'Restaurant', emoji: '🍕', cost: 12000, incomePerDay: 350, desc: 'Great cover, high launder capacity', launderBonus: 2000 },
+  { id: 'nightclub', name: 'Night Club', emoji: '🎵', cost: 25000, incomePerDay: 800, desc: 'Move product through the club scene', launderBonus: 5000, drugSaleBonus: 0.15 },
+  { id: 'warehouse', name: 'Warehouse', emoji: '🏭', cost: 8000, incomePerDay: 0, desc: 'Store 500 extra units of product', storageBonus: 500 },
+  { id: 'casino', name: 'Casino', emoji: '🎰', cost: 50000, incomePerDay: 2000, desc: 'Massive income and launder facility', launderBonus: 20000 },
+  { id: 'pharmacy', name: 'Corrupt Pharmacy', emoji: '💊', cost: 15000, incomePerDay: 400, desc: 'Legal cover for drug production', labBonus: 2, heatReduce: 5 },
+  { id: 'garage', name: 'Chop Shop', emoji: '🔧', cost: 6000, incomePerDay: 250, desc: 'Stolen vehicles, extra income', extraCash: 150 },
+  { id: 'strip_club', name: 'Strip Club', emoji: '💃', cost: 20000, incomePerDay: 600, desc: 'Information network, less heat', heatReduce: 2, incomePerDay: 600 },
+  { id: 'port', name: 'Port Access', emoji: '⚓', cost: 80000, incomePerDay: 0, desc: 'Import bulk drugs at 40% discount', importDiscount: 0.4 },
+];
+
+// ===== WEAPONS — 30+ FIREARMS + GEAR =====
+const WEAPONS = [
+  // PISTOLS
+  { id: 'zip_gun', name: 'Zip Gun', cat: 'pistol', emoji: '🔫', cost: 80, firepower: 2, defense: 0, accuracy: 30, damage: 15, range: 'close', silenced: false, desc: 'Homemade junk. Better than nothing.' },
+  { id: 'revolver', name: '.38 Revolver', cat: 'pistol', emoji: '🔫', cost: 400, firepower: 5, defense: 0, accuracy: 55, damage: 30, range: 'close', silenced: false, desc: 'Reliable 6-shooter. Classic street piece.' },
+  { id: 'glock17', name: 'Glock 17', cat: 'pistol', emoji: '🔫', cost: 700, firepower: 8, defense: 0, accuracy: 65, damage: 35, range: 'close', silenced: false, desc: '17-round semi-auto. Most common street gun.' },
+  { id: 'desert_eagle', name: 'Desert Eagle', cat: 'pistol', emoji: '🔫', cost: 1800, firepower: 14, defense: 0, accuracy: 58, damage: 65, range: 'close', silenced: false, desc: '.50 cal hand cannon. Stops anything.' },
+  { id: 'beretta', name: 'Beretta M9', cat: 'pistol', emoji: '🔫', cost: 900, firepower: 9, defense: 0, accuracy: 68, damage: 38, range: 'close', silenced: false, desc: 'Military surplus. Smooth operation.' },
+  { id: 'glock18', name: 'Glock 18 Auto', cat: 'pistol', emoji: '🔫', cost: 2200, firepower: 16, defense: 0, accuracy: 52, damage: 35, range: 'close', silenced: false, desc: 'Full-auto pistol. Spray and pray.' },
+  { id: 'sig_p226', name: 'SIG P226', cat: 'pistol', emoji: '🔫', cost: 1400, firepower: 11, defense: 0, accuracy: 72, damage: 42, range: 'close', silenced: false, desc: 'Swiss precision. Preferred by professionals.' },
+  // SHOTGUNS
+  { id: 'sawn_off', name: 'Sawn-Off', cat: 'shotgun', emoji: '💥', cost: 600, firepower: 10, defense: 1, accuracy: 45, damage: 70, range: 'close', silenced: false, desc: 'Concealable devastation.' },
+  { id: 'pump_shotgun', name: 'Pump Shotgun', cat: 'shotgun', emoji: '💥', cost: 1100, firepower: 14, defense: 2, accuracy: 55, damage: 85, range: 'close', silenced: false, desc: 'Mossberg 500. Room clearer.' },
+  { id: 'combat_shotgun', name: 'Combat Shotgun', cat: 'shotgun', emoji: '💥', cost: 3500, firepower: 22, defense: 3, accuracy: 60, damage: 90, range: 'close', silenced: false, desc: 'Semi-auto 12ga. Mag-fed carnage.' },
+  { id: 'street_sweeper', name: 'Street Sweeper', cat: 'shotgun', emoji: '💥', cost: 6000, firepower: 30, defense: 4, accuracy: 50, damage: 95, range: 'close', silenced: false, desc: '12-round drum shotgun. No survivors.' },
+  // SMGs
+  { id: 'mac10', name: 'MAC-10', cat: 'smg', emoji: '🔫', cost: 1500, firepower: 15, defense: 0, accuracy: 44, damage: 30, range: 'mid', silenced: false, desc: '1000 RPM spray machine. Terrifying.' },
+  { id: 'uzi', name: 'UZI', cat: 'smg', emoji: '🔫', cost: 2200, firepower: 18, defense: 0, accuracy: 50, damage: 32, range: 'mid', silenced: false, desc: 'Israeli classic. Iconic cartel weapon.' },
+  { id: 'mp5', name: 'MP5', cat: 'smg', emoji: '🔫', cost: 4500, firepower: 24, defense: 0, accuracy: 72, damage: 38, range: 'mid', silenced: false, desc: 'HK precision SMG. Used by SF worldwide.' },
+  { id: 'p90', name: 'FN P90', cat: 'smg', emoji: '🔫', cost: 5500, firepower: 26, defense: 0, accuracy: 70, damage: 36, range: 'mid', silenced: false, desc: '50-round bullpup. Armor-piercing rounds.' },
+  { id: 'kriss_vector', name: 'Kriss Vector', cat: 'smg', emoji: '🔫', cost: 7000, firepower: 28, defense: 0, accuracy: 74, damage: 40, range: 'mid', silenced: false, desc: '.45 ACP at 1200 RPM. Zero recoil.' },
+  // RIFLES
+  { id: 'ak47', name: 'AK-47', cat: 'rifle', emoji: '🪖', cost: 3500, firepower: 28, defense: 3, accuracy: 60, damage: 60, range: 'long', silenced: false, desc: 'Kalashnikov classic. Indestructible.' },
+  { id: 'ar15', name: 'AR-15', cat: 'rifle', emoji: '🪖', cost: 4000, firepower: 26, defense: 3, accuracy: 70, damage: 55, range: 'long', silenced: false, desc: 'American icon. Modular and accurate.' },
+  { id: 'm4', name: 'M4 Carbine', cat: 'rifle', emoji: '🪖', cost: 6000, firepower: 30, defense: 4, accuracy: 75, damage: 58, range: 'long', silenced: false, desc: 'Military carbine. Compact & lethal.' },
+  { id: 'scar', name: 'FN SCAR', cat: 'rifle', emoji: '🪖', cost: 9000, firepower: 34, defense: 5, accuracy: 78, damage: 65, range: 'long', silenced: false, desc: 'Special Forces battle rifle. Premium kit.' },
+  { id: 'galil', name: 'Galil ACE', cat: 'rifle', emoji: '🪖', cost: 5000, firepower: 29, defense: 3, accuracy: 66, damage: 62, range: 'long', silenced: false, desc: 'Israeli battle rifle. Rugged & deadly.' },
+  { id: 'dragunov', name: 'Dragunov DMR', cat: 'rifle', emoji: '🪖', cost: 8000, firepower: 32, defense: 2, accuracy: 82, damage: 70, range: 'long', silenced: false, desc: 'Soviet designated marksman rifle.' },
+  // SNIPERS
+  { id: 'remington700', name: 'Remington 700', cat: 'sniper', emoji: '🎯', cost: 8000, firepower: 35, defense: 0, accuracy: 85, damage: 90, range: 'extreme', silenced: false, desc: 'Bolt-action precision. One shot, one kill.' },
+  { id: 'barret_m82', name: 'Barrett M82', cat: 'sniper', emoji: '🎯', cost: 18000, firepower: 55, defense: 0, accuracy: 82, damage: 120, range: 'extreme', silenced: false, desc: '.50 cal anti-materiel. Stops vehicles.' },
+  { id: 'awp', name: 'AWP Magnum', cat: 'sniper', emoji: '🎯', cost: 14000, firepower: 48, defense: 0, accuracy: 88, damage: 110, range: 'extreme', silenced: false, desc: 'Arctic Warfare Police. Feared globally.' },
+  { id: 'cheytac', name: 'CheyTac M200', cat: 'sniper', emoji: '🎯', cost: 25000, firepower: 65, defense: 0, accuracy: 92, damage: 130, range: 'extreme', silenced: false, desc: '2-mile effective range. Ghost rounds.' },
+  // HEAVY
+  { id: 'minigun', name: 'M134 Minigun', cat: 'heavy', emoji: '⚙️', cost: 40000, firepower: 100, defense: 0, accuracy: 55, damage: 200, range: 'mid', silenced: false, desc: '6000 RPM rotary death machine.' },
+  { id: 'rpg7', name: 'RPG-7', cat: 'heavy', emoji: '🚀', cost: 15000, firepower: 80, defense: 0, accuracy: 65, damage: 300, range: 'long', silenced: false, desc: 'Rocket propelled grenade. Levels buildings.' },
+  { id: 'grenade_launcher', name: 'M79 Grenade Launcher', cat: 'heavy', emoji: '💣', cost: 20000, firepower: 70, defense: 0, accuracy: 68, damage: 250, range: 'long', silenced: false, desc: 'Thumper. Bouncing betty grenades.' },
+  { id: 'm249', name: 'M249 SAW', cat: 'heavy', emoji: '🔫', cost: 18000, firepower: 75, defense: 5, accuracy: 58, damage: 70, range: 'long', silenced: false, desc: 'Squad automatic weapon. 200-round belt.' },
+  { id: 'c4', name: 'C4 Explosive', cat: 'heavy', emoji: '💥', cost: 12000, firepower: 90, defense: 0, accuracy: 100, damage: 500, range: 'close', silenced: true, desc: 'Plastic explosive. Remote detonated.' },
+  // GEAR / PROTECTION
+  { id: 'knife', name: 'Combat Knife', cat: 'gear', emoji: '🔪', cost: 100, firepower: 2, defense: 1, accuracy: 80, damage: 20, range: 'melee', silenced: true, desc: 'Silent takedown. No noise, no witness.' },
+  { id: 'garrote', name: 'Garrote Wire', cat: 'gear', emoji: '🪢', cost: 200, firepower: 3, defense: 0, accuracy: 75, damage: 25, range: 'melee', silenced: true, desc: 'Assassination wire. 100% silent.' },
+  { id: 'silencer_kit', name: 'Silencer Kit', cat: 'gear', emoji: '🔕', cost: 3500, firepower: 8, defense: 0, heatReduce: 3, accuracy: 70, damage: 0, range: 'all', silenced: true, desc: 'Attachment kit. Quiets any weapon.' },
+  { id: 'vest', name: 'Bulletproof Vest', cat: 'gear', emoji: '🦺', cost: 2000, firepower: 0, defense: 15, accuracy: 0, damage: 0, range: 'none', desc: 'Level IIIA protection.' },
+  { id: 'plate_carrier', name: 'Plate Carrier', cat: 'gear', emoji: '🦺', cost: 6000, firepower: 0, defense: 30, accuracy: 0, damage: 0, range: 'none', desc: 'Military grade plates. Stops 5.56.' },
+  { id: 'armored_car', name: 'Armored SUV', cat: 'gear', emoji: '🚙', cost: 30000, firepower: 0, defense: 45, accuracy: 0, damage: 0, range: 'none', desc: 'B6 armored. Withstands AK fire.' },
+  { id: 'drone', name: 'Tactical Drone', cat: 'gear', emoji: '🚁', cost: 8000, firepower: 8, defense: 0, heatReduce: 2, accuracy: 90, damage: 10, range: 'extreme', silenced: true, desc: 'Recon & payload delivery.' },
+  { id: 'frag_grenades', name: 'Frag Grenades (x5)', cat: 'gear', emoji: '💣', cost: 1200, firepower: 22, defense: 0, accuracy: 60, damage: 120, range: 'mid', silenced: false, desc: 'Fragmentation grenades. Area blast.' },
+  { id: 'flashbang', name: 'Flashbangs (x5)', cat: 'gear', emoji: '💡', cost: 800, firepower: 6, defense: 5, accuracy: 100, damage: 5, range: 'mid', silenced: false, desc: 'Disorient targets, reduce return fire.' },
+];
+
+// ===== TERRITORIES =====
+const TERRITORIES = [
+  { id: 't1', name: 'South Side', baseIncome: 200, risk: 0.1 },
+  { id: 't2', name: 'East Block', baseIncome: 180, risk: 0.1 },
+  { id: 't3', name: 'Barrio Norte', baseIncome: 250, risk: 0.2 },
+  { id: 't4', name: 'The Docks', baseIncome: 400, risk: 0.25 },
+  { id: 't5', name: 'Downtown', baseIncome: 600, risk: 0.3 },
+  { id: 't6', name: 'North End', baseIncome: 220, risk: 0.15 },
+  { id: 't7', name: 'Chinatown', baseIncome: 350, risk: 0.2 },
+  { id: 't8', name: 'Sunset Strip', baseIncome: 500, risk: 0.3 },
+  { id: 't9', name: 'Airport Zone', baseIncome: 800, risk: 0.4 },
+  { id: 't10', name: 'Favela Hills', baseIncome: 300, risk: 0.2 },
+  { id: 't11', name: 'The Warehouse Dist.', baseIncome: 450, risk: 0.25 },
+  { id: 't12', name: 'Red Light Dist.', baseIncome: 550, risk: 0.3 },
+  { id: 't13', name: 'Financial Dist.', baseIncome: 700, risk: 0.35 },
+  { id: 't14', name: 'Port Juarez', baseIncome: 900, risk: 0.4 },
+  { id: 't15', name: 'The Projects', baseIncome: 280, risk: 0.15 },
+  { id: 't16', name: 'Casino Row', baseIncome: 1000, risk: 0.45 },
+  { id: 't17', name: 'Industrial Zone', baseIncome: 600, risk: 0.35 },
+  { id: 't18', name: 'Border Crossing', baseIncome: 1500, risk: 0.5 },
+  { id: 't19', name: 'Cartel HQ', baseIncome: 2000, risk: 0.6 },
+  { id: 't20', name: 'Palace District', baseIncome: 3000, risk: 0.7 },
+];
+
+// ===== MISSIONS =====
+const MISSIONS = [
+  { id: 'm1', name: 'First Score', emoji: '💊', desc: 'Sell 10 units on the street corner.', reward: 500, xp: 100, respect: 5, risk: 0.05, req: { minLevel: 1 }, type: 'sell' },
+  { id: 'm2', name: 'Corner Control', emoji: '🏪', desc: 'Take over a corner from a rival dealer.', reward: 1200, xp: 250, respect: 15, risk: 0.15, req: { minLevel: 1, firepower: 5 }, type: 'territory' },
+  { id: 'm3', name: 'Drug Run', emoji: '🚗', desc: 'Transport a shipment across town without getting caught.', reward: 2000, xp: 400, respect: 20, risk: 0.2, req: { minLevel: 2 }, type: 'delivery' },
+  { id: 'm4', name: 'Police Bribe', emoji: '👮', desc: 'Pay off a corrupt cop for protection.', reward: 0, xp: 300, respect: 10, cash: -2000, heatReduce: 25, risk: 0.1, req: { minLevel: 2, cash: 2000 }, type: 'bribe' },
+  { id: 'm5', name: 'Hit a Rival', emoji: '💀', desc: 'Eliminate a rival cartel member.', reward: 3000, xp: 600, respect: 30, risk: 0.3, req: { minLevel: 3, firepower: 15 }, type: 'hit' },
+  { id: 'm6', name: 'Bank Robbery', emoji: '🏦', desc: 'Rob an armored truck for instant cash.', reward: 8000, xp: 1000, respect: 50, risk: 0.4, req: { minLevel: 4, firepower: 30 }, type: 'robbery' },
+  { id: 'm7', name: 'Cartel Negotiation', emoji: '🤝', desc: 'Meet with a rival boss to negotiate peace.', reward: 5000, xp: 800, respect: 60, risk: 0.2, req: { minLevel: 4, respect: 50 }, type: 'diplomacy' },
+  { id: 'm8', name: 'Prison Break', emoji: '🔓', desc: 'Break out a key crew member from custody.', reward: 0, xp: 1500, respect: 80, heatReduce: -20, risk: 0.45, req: { minLevel: 5, firepower: 50 }, type: 'heist' },
+  { id: 'm9', name: 'Supply Raid', emoji: '📦', desc: 'Raid a rival\'s warehouse and steal their stash.', reward: 0, xp: 1200, respect: 70, drugReward: { type: 'coke', qty: 30 }, risk: 0.4, req: { minLevel: 5, firepower: 40 }, type: 'raid' },
+  { id: 'm10', name: 'Assassinate a Boss', emoji: '🎯', desc: 'Take out a rival cartel boss to seize their territory.', reward: 20000, xp: 3000, respect: 150, risk: 0.55, req: { minLevel: 7, firepower: 80 }, type: 'assassination' },
+  { id: 'm11', name: 'Political Corruption', emoji: '🏛️', desc: 'Buy a politician for permanent protection.', reward: 0, xp: 2000, respect: 100, heatReduce: 40, cash: -30000, risk: 0.15, req: { minLevel: 8, cash: 30000, respect: 100 }, type: 'corruption' },
+  { id: 'm12', name: 'Coast Guard Bribe', emoji: '⛵', desc: 'Secure shipping lanes for bulk import.', reward: 0, xp: 2500, respect: 80, cash: -50000, importBonus: true, risk: 0.2, req: { minLevel: 9, cash: 50000 }, type: 'bribe' },
+  { id: 'm13', name: 'Intercept DEA', emoji: '🚁', desc: 'Plant false intel and derail a DEA investigation.', reward: 15000, xp: 3500, respect: 200, heatReduce: 50, risk: 0.6, req: { minLevel: 10, firepower: 100 }, type: 'intelligence' },
+  { id: 'm14', name: 'Become the Kingpin', emoji: '👑', desc: 'Assert total dominance over the city.', reward: 100000, xp: 10000, respect: 500, risk: 0.3, req: { minLevel: 15, respect: 400, territories: 10 }, type: 'prestige' },
+];
+
+// ===== LAB RECIPES =====
+const RECIPES = [
+  { id: 'r_weed', drug: 'weed', name: 'Grow Weed', emoji: '🌿', precursors: 1, chemicals: 0, equipment: 0, yield: 20, time: 'instant', labLevel: 1 },
+  { id: 'r_pills', drug: 'pills', name: 'Press Pills', emoji: '💊', precursors: 2, chemicals: 1, equipment: 0, yield: 15, time: 'instant', labLevel: 1 },
+  { id: 'r_meth', drug: 'meth', name: 'Cook Meth', emoji: '💎', precursors: 3, chemicals: 3, equipment: 2, yield: 10, time: 'instant', labLevel: 2 },
+  { id: 'r_coke', drug: 'coke', name: 'Process Coke', emoji: '❄️', precursors: 4, chemicals: 2, equipment: 1, yield: 8, time: 'instant', labLevel: 2 },
+  { id: 'r_heroin', drug: 'heroin', name: 'Refine Heroin', emoji: '💉', precursors: 5, chemicals: 4, equipment: 3, yield: 6, time: 'instant', labLevel: 3 },
+  { id: 'r_fentanyl', drug: 'fentanyl', name: 'Synthesize Fentanyl', emoji: '⚠️', precursors: 8, chemicals: 8, equipment: 6, yield: 4, time: 'instant', labLevel: 4 },
+  { id: 'r_mdma', drug: 'mdma', name: 'Produce MDMA', emoji: '🔴', precursors: 3, chemicals: 3, equipment: 2, yield: 12, time: 'instant', labLevel: 2 },
+  { id: 'r_lsd', drug: 'lsd', name: 'Synthesize LSD', emoji: '🌈', precursors: 2, chemicals: 5, equipment: 3, yield: 20, time: 'instant', labLevel: 3 },
+];
+
+// ===== LAUNDER UPGRADES =====
+const LAUNDER_UPGRADES = [
+  { id: 'l1', name: 'Cash Counter', emoji: '💵', cost: 3000, desc: '+$500 launder limit', done: false },
+  { id: 'l2', name: 'Shell Corp', emoji: '🏢', cost: 8000, desc: '+$2000 launder limit', done: false },
+  { id: 'l3', name: 'Offshore Account', emoji: '🏝️', cost: 20000, desc: '+5% launder rate, +$5000 limit', done: false },
+  { id: 'l4', name: 'Crypto Mixer', emoji: '💻', cost: 15000, desc: '+10% launder rate', done: false },
+  { id: 'l5', name: 'Bank Insider', emoji: '🏦', cost: 40000, desc: 'Double launder capacity', done: false },
+];
+
+// ===== VEHICLES =====
+const VEHICLES_DATA = [
+  { id: 'bicycle', name: 'Bicycle', emoji: '🚲', cost: 0, speed: 1, capacity: 10, status: 0, escape: 5, desc: 'Free starter ride. Humble beginnings.', bonus: 'None' },
+  { id: 'moped', name: 'Moped', emoji: '🛵', cost: 800, speed: 2, capacity: 20, status: 1, escape: 12, desc: 'Cheap & fast. Good for quick runs.', bonus: '+5% drug sell speed' },
+  { id: 'motorcycle', name: 'Street Motorcycle', emoji: '🏍️', cost: 3500, speed: 4, capacity: 30, status: 2, escape: 22, desc: 'Weave through traffic. Great escape vehicle.', bonus: '+10% escape chance, -5% heat per deal' },
+  { id: 'civic', name: 'Honda Civic', emoji: '🚗', cost: 6000, speed: 3, capacity: 50, status: 2, escape: 18, desc: 'Blend in perfectly. Average Joe car.', bonus: '-15% police detection chance' },
+  { id: 'pickup', name: 'Pickup Truck', emoji: '🛻', cost: 10000, speed: 2, capacity: 120, status: 3, escape: 12, desc: 'Haul huge loads with zero questions.', bonus: '+60% drug carry capacity' },
+  { id: 'van', name: 'Cargo Van', emoji: '🚐', cost: 15000, speed: 2, capacity: 200, status: 2, escape: 10, desc: 'Anonymous mass transit for product.', bonus: '+100% drug carry capacity, -20% bust chance' },
+  { id: 'muscle_car', name: 'Muscle Car', emoji: '🚘', cost: 22000, speed: 5, capacity: 40, status: 4, escape: 30, desc: 'Raw American power. Loud and proud.', bonus: '+15% respect per deal, fast escape' },
+  { id: 'suv', name: 'Black SUV', emoji: '🚙', cost: 28000, speed: 3, capacity: 80, status: 4, escape: 20, desc: 'The cartel classic. Intimidating presence.', bonus: '+10% crew intimidation, -10% heat' },
+  { id: 'hummer', name: 'Hummer H2', emoji: '🚛', cost: 38000, speed: 2, capacity: 100, status: 5, escape: 14, desc: 'Massive dominance on the road.', bonus: '+20% territory defense, +10% respect aura' },
+  { id: 'sports_car', name: 'Sports Car', emoji: '🏎️', cost: 55000, speed: 7, capacity: 25, status: 6, escape: 40, desc: '0-60 in 3.2 seconds. Police can\'t catch you.', bonus: '+25% escape chance, +15% street respect' },
+  { id: 'chopper', name: 'Harley Chopper', emoji: '🏍️', cost: 30000, speed: 4, capacity: 30, status: 5, escape: 25, desc: 'Thunder road. Pure intimidation.', bonus: '+12% crew morale, +10% intimidation on rivals' },
+  { id: 'limo', name: 'Stretch Limo', emoji: '🚖', cost: 70000, speed: 2, capacity: 40, status: 8, escape: 8, desc: 'For the true cartel boss. Drips power.', bonus: '+20% all deal prices, +25% NPC respect' },
+  { id: 'armored_suv', name: 'Armored SUV', emoji: '🚙', cost: 80000, speed: 2, capacity: 60, status: 6, escape: 15, desc: 'Bulletproof. Police-proof. Fear-proof.', bonus: '+40% crew defense, immune to ambushes' },
+  { id: 'ferrari', name: 'Ferrari 488', emoji: '🚀', cost: 150000, speed: 8, capacity: 20, status: 8, escape: 50, desc: 'The pinnacle of street wealth. Untouchable.', bonus: '+30% all deal prices, +35% street respect' },
+  { id: 'helicopter', name: 'Private Helicopter', emoji: '🚁', cost: 300000, speed: 9, capacity: 150, status: 9, escape: 70, desc: 'Above the law, literally.', bonus: '+25% all income, instant police evasion, air drop missions' },
+  { id: 'yacht', name: 'Luxury Yacht', emoji: '⛵', cost: 500000, speed: 3, capacity: 500, status: 10, escape: 60, desc: 'Offshore empire. Untouchable on the water.', bonus: '+40% international drug value, -35% DEA heat' },
+  { id: 'jet', name: 'Private Jet', emoji: '✈️', cost: 750000, speed: 10, capacity: 300, status: 10, escape: 80, desc: 'International smuggling network.', bonus: '+50% all prices, unlock global drug trade' },
+  { id: 'tank', name: 'Armored Tank', emoji: '🪖', cost: 1000000, speed: 1, capacity: 200, status: 10, escape: 90, desc: 'Absolute war machine. Nothing stops you.', bonus: 'Immune to all raids, +100% war power' },
+];
+
+// ===== VIP ITEMS =====
+const VIP_ITEMS = [
+  { id: 'golden_ak', name: 'Golden AK-47', emoji: '🔱', vpCost: 50, desc: 'Legendary weapon. +150 firepower, intimidates all rivals on sight.', effect: 'firepower+150' },
+  { id: 'ghost_helo', name: 'Ghost Helicopter', emoji: '👻', vpCost: 100, desc: 'Stealth helicopter. -50% heat, +50% territory income, available as vehicle.', effect: 'vehicle' },
+  { id: 'diamond_badge', name: 'Diamond Cartel Badge', emoji: '💎', vpCost: 30, desc: '+300% respect gain from all activities. Your name rings out.', effect: 'respect_mult' },
+  { id: 'mega_lab', name: 'Mega Lab Module', emoji: '⚗️', vpCost: 80, desc: 'Doubles yield on ALL drug production runs. Stack with chemist.', effect: 'lab_double' },
+  { id: 'fed_mole', name: 'Federal Mole', emoji: '🕴️', vpCost: 60, desc: 'DEA insider on payroll. Reduces all heat gain by 50% permanently.', effect: 'heat_half' },
+  { id: 'ghost_protocol', name: 'Ghost Protocol', emoji: '👁️', vpCost: 70, desc: 'Go completely dark. Click to become invisible to police for 5 minutes.', effect: 'active_skill' },
+  { id: 'money_printer', name: 'Money Printer', emoji: '🖨️', vpCost: 120, desc: 'Generates $8,000 clean cash every real-world minute automatically.', effect: 'passive_income' },
+  { id: 'black_market_key', name: 'Black Market Access', emoji: '🗝️', vpCost: 40, desc: 'Unlocks a secret black market with 3x price drugs not available normally.', effect: 'black_market' },
+  { id: 'el_chapo_deal', name: 'El Chapo Contact', emoji: '😎', vpCost: 150, desc: 'Legendary deal: free drug shipment worth $50K every game day.', effect: 'daily_shipment' },
+  { id: 'bulletproof_car', name: 'Narco Supercar', emoji: '🏎️', vpCost: 90, desc: 'Custom bulletproof supercar. +60% escape, +40% respect, impossible to seize.', effect: 'vehicle' },
+  { id: 'royal_guard', name: 'Royal Guard Squad (x20)', emoji: '👑', vpCost: 110, desc: '20 elite royal guards added to your crew permanently. +400 firepower total.', effect: 'crew_bonus' },
+  { id: 'dark_web_shop', name: 'Dark Web Shop', emoji: '💻', vpCost: 75, desc: 'Shop for exclusive items and sell drugs at 2x price via dark web.', effect: 'dark_web' },
+  { id: 'invisibility_cloak', name: 'Police Scanner Cloak', emoji: '📡', vpCost: 55, desc: 'Makes all your vehicles invisible to police scanners. Zero heat from transport.', effect: 'scanner_cloak' },
+  { id: 'offshore_bank', name: 'Offshore Bank Account', emoji: '🏦', vpCost: 85, desc: 'Unlimited launder capacity at 98% rate. Untouchable by police seizure.', effect: 'launder_max' },
+  { id: 'cartel_throne', name: 'Cartel Throne', emoji: '🪑', vpCost: 200, desc: 'The ultimate status symbol. +500% all passive income, max respect aura.', effect: 'throne_bonus' },
+];
+
+// ===== VIP LEVEL PERKS =====
+const VIP_PERKS = [
+  { level: 1, name: '🌟 VIP Initiate', desc: '+10% all drug sale prices. Welcome to the club.' },
+  { level: 2, name: '💰 Money Magnet', desc: '+15% territory income. Cash flows to you.' },
+  { level: 3, name: '🔥 Heat Shield', desc: '-20% heat generated from all activities.' },
+  { level: 4, name: '⚔️ War Machine', desc: '+25% firepower in all combat situations.' },
+  { level: 5, name: '👑 Cartel Royalty', desc: '+30% respect from all sources. Your name is legend.' },
+  { level: 6, name: '💎 Diamond Hands', desc: 'Prevent 30% of police seizures automatically.' },
+  { level: 7, name: '🧪 Master Chemist', desc: '+50% lab yield on all production runs.' },
+  { level: 8, name: '🌍 Global Reach', desc: '+40% income from all properties and territories.' },
+  { level: 9, name: '☠️ Untouchable', desc: 'Police raids fail 50% of the time. You are ghost.' },
+  { level: 10, name: '😈 El Diablo', desc: '2x ALL income sources. Maximum stat bonuses. Absolute power.' },
+];
+
+// ===== LEVEL TITLES =====
+const LEVEL_TITLES = [
+  '', 'Street Dealer', 'Corner Boss', 'Block Controller', 'Local Legend',
+  'Cartel Associate', 'Cartel Captain', 'Underboss', 'Cartel Boss',
+  'Regional Kingpin', 'National Distributor', 'Cartel Commander',
+  'El Jefe', 'Cartel Emperor', 'Narco God', 'El Padrino'
+];
+
+// ===== HELPERS =====
+const fmt = n => '$' + Math.floor(n).toLocaleString();
+const fmtNum = n => Math.floor(n).toLocaleString();
+
+function getTotalFirepower() {
+  let fp = 0;
+  Object.entries(G.crew).forEach(([id, count]) => {
+    const ct = CREW_TYPES.find(c => c.id === id);
+    if (ct) fp += ct.firepower * count;
+  });
+  Object.entries(G.ownedWeapons).forEach(([id, count]) => {
+    const w = WEAPONS.find(x => x.id === id);
+    if (w) fp += w.firepower * count;
+  });
+  return fp;
+}
+
+function getTotalDefense() {
+  let def = 0;
+  Object.entries(G.crew).forEach(([id, count]) => {
+    const ct = CREW_TYPES.find(c => c.id === id);
+    if (ct) def += ct.defense * count;
+  });
+  Object.entries(G.ownedWeapons).forEach(([id, count]) => {
+    const w = WEAPONS.find(x => x.id === id);
+    if (w) def += w.defense * count;
+  });
+  return def;
+}
+
+function getCrewCount() {
+  return Object.values(G.crew).reduce((a, b) => a + b, 0);
+}
+
+function getDailyWages() {
+  let wages = 0;
+  Object.entries(G.crew).forEach(([id, count]) => {
+    const ct = CREW_TYPES.find(c => c.id === id);
+    if (ct) wages += ct.wage * count;
+  });
+  return wages;
+}
+
+function getTotalInventory() {
+  return Object.values(G.inventory).reduce((a, b) => a + b, 0);
+}
+
+function getTotalIncome() {
+  let inc = 0;
+  Object.entries(G.crew).forEach(([id, count]) => {
+    const ct = CREW_TYPES.find(c => c.id === id);
+    if (ct && ct.income) inc += ct.income * count;
+  });
+  G.ownedProperties.forEach(pid => {
+    const p = PROPERTIES.find(x => x.id === pid);
+    if (p && p.incomePerDay) inc += p.incomePerDay;
+  });
+  return inc;
+}
+
+function getOwnedTerritories() {
+  return Object.values(G.territories).filter(t => t === 'owned').length;
+}
+
+function getTerritoryIncome() {
+  let inc = 0;
+  Object.entries(G.territories).forEach(([id, state]) => {
+    if (state === 'owned') {
+      const t = TERRITORIES.find(x => x.id === id);
+      if (t) inc += t.baseIncome;
+    }
+  });
+  return inc;
+}
+
+function getLaunderMax() {
+  let max = G.launderMaxPerDay;
+  G.ownedProperties.forEach(pid => {
+    const p = PROPERTIES.find(x => x.id === pid);
+    if (p && p.launderBonus) max += p.launderBonus;
+  });
+  LAUNDER_UPGRADES.forEach(u => {
+    if (u.done && u.id === 'l1') max += 500;
+    if (u.done && u.id === 'l2') max += 2000;
+    if (u.done && u.id === 'l3') max += 5000;
+    if (u.done && u.id === 'l5') max = max * 2;
+  });
+  return max;
+}
+
+function getLaunderRate() {
+  let rate = G.launderRate;
+  const accountants = G.crew.accountant || 0;
+  rate += accountants * 0.05;
+  LAUNDER_UPGRADES.forEach(u => {
+    if (u.done && u.id === 'l3') rate += 0.05;
+    if (u.done && u.id === 'l4') rate += 0.10;
+  });
+  return Math.min(rate, 1.0);
+}
+
+function getXPNeeded(level) {
+  return Math.floor(1000 * Math.pow(1.5, level - 1));
+}
+
+function getLevel(xp) {
+  let l = 1, x = xp;
+  while (x >= getXPNeeded(l) && l < 15) {
+    x -= getXPNeeded(l);
+    l++;
+  }
+  return l;
+}
+
+function addXP(amount) {
+  const oldLevel = G.level;
+  G.xp += amount;
+  G.level = getLevel(G.xp);
+  if (G.level > oldLevel) {
+    notify(`🎉 LEVEL UP! You are now level ${G.level} — ${LEVEL_TITLES[G.level]}!`, 'warn');
+    addLog(`⭐ LEVEL UP → ${LEVEL_TITLES[G.level]}!`, 'warn');
+    // Level up bonuses
+    G.cash += G.level * 500;
+    addLog(`💰 Level up bonus: ${fmt(G.level * 500)}`, 'good');
+  }
+}
+
+function addRespect(amount) {
+  G.respect = Math.max(0, G.respect + amount);
+}
+
+function addHeat(amount) {
+  G.heat = Math.min(100, Math.max(0, G.heat + amount));
+  if (G.heat >= 80 && G.heat < 90) notify('🚨 Heat is critical! Lay low!', 'bad');
+  if (G.heat >= 90) policeRaid();
+}
+
+function addLog(msg, type = '') {
+  const log = document.getElementById('log');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry ' + type;
+  const time = new Date().toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  entry.textContent = `[${time}] ${msg}`;
+  log.prepend(entry);
+  while (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+function notify(msg, type = '') {
+  const div = document.createElement('div');
+  div.className = 'notif ' + type;
+  div.textContent = msg;
+  document.getElementById('notifications').appendChild(div);
+  setTimeout(() => div.remove(), 3100);
+}
+
+function checkAchievements() {
+  const achList = [
+    // MONEY
+    { id: 'first_sale', name: '🏆 First Sale', check: () => G.totalDrugsSold >= 1 },
+    { id: 'big_earner', name: '💰 Big Earner', check: () => G.totalEarnings >= 10000 },
+    { id: 'hundred_k', name: '💵 Six Figures', check: () => G.totalEarnings >= 100000 },
+    { id: 'millionaire', name: '💎 Millionaire', check: () => (G.cash + G.bank) >= 1000000 },
+    { id: 'ten_millionaire', name: '🤑 10 Million Club', check: () => G.totalEarnings >= 10000000 },
+    { id: 'penny_flipper', name: '🪙 Penny Flipper', check: () => G.totalDrugsSold >= 50 },
+    { id: 'drug_baron', name: '💊 Drug Baron', check: () => G.totalDrugsSold >= 500 },
+    { id: 'drug_emperor', name: '⚠️ Drug Emperor', check: () => G.totalDrugsSold >= 5000 },
+    { id: 'banker', name: '🏦 Banker', check: () => G.bank >= 500000 },
+    // LEVEL
+    { id: 'crime_lord', name: '👑 Crime Lord', check: () => G.level >= 5 },
+    { id: 'cartel_captain', name: '🎖️ Cartel Captain', check: () => G.level >= 7 },
+    { id: 'kingpin', name: '🌟 Kingpin', check: () => G.level >= 10 },
+    { id: 'el_jefe', name: '🔱 El Jefe', check: () => G.level >= 12 },
+    { id: 'narco_god', name: '😈 Narco God', check: () => G.level >= 15 },
+    // RESPECT
+    { id: 'feared', name: '😈 Feared', check: () => G.respect >= 100 },
+    { id: 'notorious', name: '🔥 Notorious', check: () => G.respect >= 500 },
+    { id: 'legendary', name: '🌟 Legendary', check: () => G.respect >= 2000 },
+    { id: 'immortal_rep', name: '♾️ Immortal', check: () => G.respect >= 10000 },
+    // PROPERTY
+    { id: 'homeowner', name: '🏠 First Property', check: () => G.ownedProperties.length >= 1 },
+    { id: 'empire', name: '🏰 Empire Builder', check: () => G.ownedProperties.length >= 5 },
+    { id: 'tycoon', name: '🏙️ Real Estate Tycoon', check: () => G.ownedProperties.length >= 8 },
+    { id: 'mogul', name: '💼 Business Mogul', check: () => G.ownedProperties.length >= 10 },
+    // CREW
+    { id: 'gang_starter', name: '👊 Gang Starter', check: () => getCrewCount() >= 5 },
+    { id: 'warlord', name: '⚔️ Warlord', check: () => getCrewCount() >= 20 },
+    { id: 'army_general', name: '🪖 Army General', check: () => getCrewCount() >= 50 },
+    { id: 'hired_sicario', name: '☠️ Sicario Hired', check: () => (G.crew.enforcer || 0) >= 5 },
+    { id: 'loyal_legion', name: '❤️ Loyal Legion', check: () => getCrewCount() >= 100 },
+    // TERRITORY
+    { id: 'block_owner', name: '📍 Block Owner', check: () => getOwnedTerritories() >= 1 },
+    { id: 'territory_king', name: '🗺️ Territory King', check: () => getOwnedTerritories() >= 10 },
+    { id: 'city_controller', name: '🌆 City Controller', check: () => getOwnedTerritories() >= 15 },
+    { id: 'total_domination', name: '🌎 Total Domination', check: () => getOwnedTerritories() >= 20 },
+    // COMBAT
+    { id: 'first_blood', name: '🩸 First Blood', check: () => G.kills >= 1 },
+    { id: 'marksman', name: '🎯 Marksman', check: () => G.headshotKills >= 5 },
+    { id: 'silent_assassin', name: '🔕 Silent Assassin', check: () => G.silentKills >= 10 },
+    { id: 'executioner', name: '💀 Executioner', check: () => G.kills >= 25 },
+    { id: 'mass_murderer', name: '☠️ Mass Murderer', check: () => G.bodyCount >= 50 },
+    { id: 'ghost', name: '👻 Ghost', check: () => G.kills >= 10 },
+    { id: 'war_general', name: '🎖️ War General', check: () => G.combatWins >= 20 },
+    { id: 'survivor', name: '🩹 Survivor', check: () => G.combatLosses >= 5 && G.health > 0 },
+    { id: 'hitman', name: '🔫 Professional Hitman', check: () => G.kills >= 100 },
+    { id: 'death_incarnate', name: '💀 Death Incarnate', check: () => G.bodyCount >= 200 },
+    // WEAPONS
+    { id: 'arms_dealer', name: '🔫 Arsenal', check: () => Object.keys(G.ownedWeapons).length >= 10 },
+    { id: 'gun_nut', name: '⚙️ Gun Nut', check: () => Object.keys(G.ownedWeapons).length >= 20 },
+    { id: 'full_armory', name: '🪖 Full Armory', check: () => Object.keys(G.ownedWeapons).length >= 30 },
+    // LAB
+    { id: 'chemist_badge', name: '🧪 Street Chemist', check: () => (G.totalManufactured || 0) >= 100 },
+    { id: 'master_cook', name: '🔬 Master Cook', check: () => (G.totalManufactured || 0) >= 1000 },
+    { id: 'lab_king', name: '⚗️ Lab King', check: () => G.labLevel >= 4 },
+    // SPECIAL
+    { id: 'untouchable', name: '🛡️ Untouchable', check: () => G.heat <= 5 && G.totalEarnings > 5000 },
+    { id: 'ice_cold', name: '🧊 Ice Cold', check: () => G.heat === 0 && G.totalEarnings > 50000 },
+    { id: 'clean_money', name: '🏦 Clean Money', check: () => G.bank >= 100000 },
+    { id: 'vip_member', name: '⭐ VIP Member', check: () => G.vipActive },
+    { id: 'vip_elite', name: '💜 VIP Elite', check: () => G.vipLevel >= 5 },
+    { id: 'fleet_owner', name: '🚗 Fleet Owner', check: () => G.ownedVehicles.length >= 5 },
+    { id: 'jet_setter', name: '✈️ Jet Setter', check: () => G.ownedVehicles.includes('jet') },
+    { id: 'tank_commander', name: '🪖 Tank Commander', check: () => G.ownedVehicles.includes('tank') },
+    { id: 'mission_runner', name: '⚡ Mission Runner', check: () => G.missionsDone >= 5 },
+    { id: 'mission_veteran', name: '🏅 Mission Veteran', check: () => G.missionsDone >= 10 },
+  ];
+  achList.forEach(a => {
+    if (!G.achievements.includes(a.id) && a.check()) {
+      G.achievements.push(a.id);
+      notify(`🏅 ACHIEVEMENT UNLOCKED: ${a.name}`, 'warn');
+      addLog(`🏅 Achievement: ${a.name}`, 'warn');
+      // Give VIP XP for achievements
+      if (G.vipActive) { G.vipXP += 10; checkVIPLevel(); }
+    }
+  });
+}
+
+// ===== MARKET =====
+let marketTick = 30;
+
+function updateMarketPrices() {
+  DRUGS.forEach(d => {
+    const change = (Math.random() - 0.45) * d.basePrice * 0.3;
+    marketPrices[d.id] = Math.max(d.basePrice * 0.3, Math.min(d.basePrice * 3, marketPrices[d.id] + change));
+  });
+  renderMarket();
+  updateTicker();
+}
+
+function buyDrug(drugId) {
+  const drug = DRUGS.find(d => d.id === drugId);
+  const qty = parseInt(document.getElementById('buy_' + drugId)?.value) || 1;
+  const price = drug.buyPrice;
+  let discount = 0;
+  if (G.crew.supplier) discount += CREW_TYPES.find(c => c.id === 'supplier').discountDrugs || 0;
+  if (G.ownedProperties.includes('port')) discount += 0.4;
+  const finalPrice = Math.floor(price * (1 - discount)) * qty;
+
+  if (G.cash < finalPrice) { notify('Not enough cash!', 'bad'); return; }
+  G.cash -= finalPrice;
+  G.inventory[drugId] = (G.inventory[drugId] || 0) + qty;
+  addHeat(drug.riskMult * 0.5 * qty);
+  addLog(`Bought ${qty}x ${drug.name} for ${fmt(finalPrice)}`, '');
+  renderAll();
+}
+
+function sellDrug(drugId) {
+  const drug = DRUGS.find(d => d.id === drugId);
+  const qty = parseInt(document.getElementById('sell_' + drugId)?.value) || 1;
+  if (!G.inventory[drugId] || G.inventory[drugId] < qty) { notify('Not enough stock!', 'bad'); return; }
+
+  let pricePerUnit = marketPrices[drugId];
+  if (G.ownedProperties.includes('nightclub')) pricePerUnit *= 1.15;
+
+  const total = Math.floor(pricePerUnit * qty);
+  G.inventory[drugId] -= qty;
+  G.cash += total;
+  G.totalEarnings += total;
+  G.totalDrugsSold += qty;
+  addXP(qty * 5 * drug.tier);
+  addRespect(Math.floor(qty * 0.5));
+  addHeat(drug.riskMult * qty * 0.3);
+
+  addLog(`Sold ${qty}x ${drug.name} for ${fmt(total)} (+${fmt(pricePerUnit)}/unit)`, 'good');
+  if (G.vipActive) { G.vipXP += 1; checkVIPLevel(); }
+  checkAchievements();
+  renderAll();
+}
+
+// ===== MANUFACTURE =====
+function getMaxRuns(recipe) {
+  const rm = G.rawMaterials;
+  if (recipe.precursors === 0 && recipe.chemicals === 0 && recipe.equipment === 0) return 99;
+  let max = 99;
+  if (recipe.precursors > 0) max = Math.min(max, Math.floor(rm.precursors / recipe.precursors));
+  if (recipe.chemicals > 0) max = Math.min(max, Math.floor(rm.chemicals / recipe.chemicals));
+  if (recipe.equipment > 0) max = Math.min(max, Math.floor(rm.equipment / recipe.equipment));
+  return Math.max(0, max);
+}
+
+function manufactureMax(recipeId) {
+  const recipe = RECIPES.find(r => r.id === recipeId);
+  if (!recipe) return;
+  const runs = getMaxRuns(recipe);
+  if (runs <= 0) { notify('Not enough raw materials for any run!', 'bad'); return; }
+  manufacture(recipeId, runs);
+}
+
+function manufacture(recipeId, runs) {
+  runs = runs || 1;
+  const recipe = RECIPES.find(r => r.id === recipeId);
+  if (!recipe) return;
+  if (G.labLevel < recipe.labLevel) { notify(`Need Lab Level ${recipe.labLevel}!`, 'bad'); return; }
+
+  const rm = G.rawMaterials;
+  const totalPre = recipe.precursors * runs;
+  const totalChem = recipe.chemicals * runs;
+  const totalEquip = recipe.equipment * runs;
+
+  if (rm.precursors < totalPre || rm.chemicals < totalChem || rm.equipment < totalEquip) {
+    notify('Not enough raw materials!', 'bad');
+    return;
+  }
+
+  rm.precursors -= totalPre;
+  rm.chemicals -= totalChem;
+  rm.equipment -= totalEquip;
+
+  let yieldAmt = recipe.yield * runs;
+  if (G.crew.chemist) yieldAmt = Math.floor(yieldAmt * (1 + G.crew.chemist * 0.2));
+  if (G.ownedProperties.includes('pharmacy')) yieldAmt = Math.floor(yieldAmt * 1.5);
+  if (G.vipActive && G.vipOwnedItems.includes('mega_lab')) yieldAmt = Math.floor(yieldAmt * 2);
+
+  const drug = DRUGS.find(d => d.id === recipe.drug);
+  G.inventory[recipe.drug] = (G.inventory[recipe.drug] || 0) + yieldAmt;
+  G.totalManufactured = (G.totalManufactured || 0) + yieldAmt;
+  addXP(yieldAmt * 10 * drug.tier);
+  addHeat(drug.riskMult * 2 * runs);
+  addLog(`🔬 Manufactured ${yieldAmt}x ${drug.name} (${runs} run${runs > 1 ? 's' : ''})!`, 'good');
+  checkAchievements();
+  renderAll();
+}
+
+function buySupplies() {
+  const cost = getSupplyCost();
+  if (G.cash < cost) { notify('Not enough cash!', 'bad'); return; }
+  G.cash -= cost;
+  G.rawMaterials.precursors += 10;
+  G.rawMaterials.chemicals += 8;
+  G.rawMaterials.equipment += 5;
+  addLog(`Bought supply bundle for ${fmt(cost)}`, '');
+  renderAll();
+}
+
+function getSupplyCost() {
+  let base = 200 + G.labLevel * 100;
+  if (G.crew.supplier) base *= (1 - CREW_TYPES.find(c => c.id === 'supplier').discountDrugs || 0);
+  return Math.floor(base);
+}
+
+function upgradeLabLevel() {
+  const cost = G.labLevel * 5000;
+  if (G.cash < cost) { notify(`Need ${fmt(cost)} to upgrade lab!`, 'bad'); return; }
+  if (G.labLevel >= 4) { notify('Lab is max level!', 'bad'); return; }
+  G.cash -= cost;
+  G.labLevel++;
+  notify(`🔬 Lab upgraded to Level ${G.labLevel}!`, 'warn');
+  addLog(`Lab upgraded to Level ${G.labLevel}`, 'warn');
+  renderAll();
+}
+
+// ===== TERRITORY =====
+function captureTerritory(territoryId) {
+  const t = TERRITORIES.find(x => x.id === territoryId);
+  if (!t) return;
+  if (G.territories[territoryId] === 'owned') { notify('Already owned!', ''); return; }
+
+  const fp = getTotalFirepower();
+  const needed = Math.floor(t.risk * 100);
+  const bonus = fp * 2;
+  const roll = Math.random() * 100 + bonus;
+
+  if (roll > needed) {
+    G.territories[territoryId] = 'owned';
+    addHeat(t.risk * 20);
+    addXP(500 * t.risk * 10);
+    addRespect(Math.floor(t.baseIncome / 10));
+    notify(`✅ Captured ${t.name}! Income: ${fmt(t.baseIncome)}/day`, 'good');
+    addLog(`Captured territory: ${t.name}`, 'good');
+    if (Math.random() < 0.3) G.territories[territoryId] = 'contested';
+  } else {
+    const damage = Math.floor(Math.random() * 20 + 5);
+    G.health = Math.max(1, G.health - damage);
+    addHeat(15);
+    notify(`❌ Failed to capture ${t.name}! Lost ${damage} HP`, 'bad');
+    addLog(`Failed to capture ${t.name} — took ${damage} damage`, 'bad');
+  }
+  renderAll();
+}
+
+function defendTerritory(territoryId) {
+  const t = TERRITORIES.find(x => x.id === territoryId);
+  const fp = getTotalFirepower();
+  const def = getTotalDefense();
+  const power = fp + def + (G.level * 5);
+  const roll = Math.random() * 100 + power;
+
+  if (roll > 50) {
+    G.territories[territoryId] = 'owned';
+    G.kills++;
+    addXP(300);
+    addRespect(20);
+    addHeat(10);
+    notify(`⚔️ Defended ${t.name} successfully!`, 'good');
+    addLog(`Defended territory: ${t.name}`, 'good');
+  } else {
+    G.territories[territoryId] = undefined;
+    const damage = Math.floor(Math.random() * 25 + 10);
+    G.health = Math.max(1, G.health - damage);
+    notify(`💀 Lost ${t.name}! Took ${damage} damage`, 'bad');
+    addLog(`Lost territory: ${t.name}`, 'bad');
+  }
+  renderAll();
+}
+
+// ===== CREW =====
+function hireCrew(crewId) {
+  const ct = CREW_TYPES.find(c => c.id === crewId);
+  if (!ct) return;
+  if (G.cash < ct.cost) { notify(`Need ${fmt(ct.cost)} to hire!`, 'bad'); return; }
+  G.cash -= ct.cost;
+  G.crew[crewId] = (G.crew[crewId] || 0) + 1;
+  addXP(100);
+  addLog(`Hired ${ct.name} for ${fmt(ct.cost)}`, '');
+  renderAll();
+}
+
+function fireCrew(crewId) {
+  if (!G.crew[crewId] || G.crew[crewId] <= 0) return;
+  G.crew[crewId]--;
+  if (G.crew[crewId] === 0) delete G.crew[crewId];
+  const ct = CREW_TYPES.find(c => c.id === crewId);
+  notify(`Fired ${ct.name}`, 'bad');
+  renderAll();
+}
+
+// ===== MISSIONS =====
+function doMission(missionId) {
+  const m = MISSIONS.find(x => x.id === missionId);
+  if (!m) return;
+
+  // Check requirements
+  if (G.level < (m.req.minLevel || 1)) { notify(`Need level ${m.req.minLevel}!`, 'bad'); return; }
+  if (m.req.firepower && getTotalFirepower() < m.req.firepower) { notify(`Need ${m.req.firepower} firepower!`, 'bad'); return; }
+  if (m.req.respect && G.respect < m.req.respect) { notify(`Need ${m.req.respect} respect!`, 'bad'); return; }
+  if (m.req.cash && G.cash < m.req.cash) { notify(`Need ${fmt(m.req.cash)} cash!`, 'bad'); return; }
+  if (m.req.territories && getOwnedTerritories() < m.req.territories) { notify(`Need ${m.req.territories} territories!`, 'bad'); return; }
+
+  const heatMod = G.heat / 200;
+  const defenseMod = getTotalDefense() * 0.005;
+  const levelMod = G.level * 0.01;
+  const finalRisk = Math.max(0.02, m.risk + heatMod - defenseMod - levelMod);
+
+  if (Math.random() < finalRisk) {
+    // FAIL
+    const damage = Math.floor(Math.random() * 30 + 10);
+    G.health = Math.max(1, G.health - damage);
+    addHeat(20);
+    if (m.req.cash && m.type === 'bribe') { /* don't spend */ }
+    notify(`❌ Mission failed! ${m.name} — Took ${damage} damage`, 'bad');
+    addLog(`Failed mission: ${m.name}`, 'bad');
+  } else {
+    // SUCCESS
+    if (m.req.cash) G.cash -= m.req.cash;
+    if (m.reward) { G.cash += m.reward; G.totalEarnings += m.reward; }
+    if (m.xp) addXP(m.xp);
+    if (m.respect) addRespect(m.respect);
+    if (m.heatReduce) addHeat(-m.heatReduce);
+    if (m.drugReward) {
+      G.inventory[m.drugReward.type] = (G.inventory[m.drugReward.type] || 0) + m.drugReward.qty;
+      addLog(`Gained ${m.drugReward.qty}x ${m.drugReward.type}`, 'good');
+    }
+    if (m.type === 'hit' || m.type === 'assassination') G.kills++;
+    addHeat(m.risk * 15);
+
+    if (!G.completedMissions.includes(missionId)) G.completedMissions.push(missionId);
+    G.missionsDone++;
+    if (G.vipActive) { G.vipXP += 5; checkVIPLevel(); }
+
+    notify(`✅ Mission complete: ${m.name} — +${fmt(m.reward)} +${m.xp}XP`, 'good');
+    addLog(`Completed: ${m.name} | Cash: +${fmt(m.reward)} | XP: +${m.xp}`, 'good');
+    checkAchievements();
+  }
+  renderAll();
+}
+
+// ===== PROPERTIES =====
+function buyProperty(propertyId) {
+  const p = PROPERTIES.find(x => x.id === propertyId);
+  if (!p) return;
+  if (G.ownedProperties.includes(propertyId)) { notify('Already owned!', ''); return; }
+  if (G.cash + G.bank < p.cost) { notify(`Need ${fmt(p.cost)}!`, 'bad'); return; }
+
+  const fromBank = Math.min(G.bank, Math.max(0, p.cost - G.cash));
+  const fromCash = p.cost - fromBank;
+  G.cash -= fromCash;
+  G.bank -= fromBank;
+
+  G.ownedProperties.push(propertyId);
+  if (p.labBonus) G.labLevel += p.labBonus;
+  addXP(500);
+  addRespect(20);
+  notify(`✅ Purchased ${p.name}!`, 'good');
+  addLog(`Purchased property: ${p.name} for ${fmt(p.cost)}`, 'good');
+  checkAchievements();
+  renderAll();
+}
+
+// ===== WEAPONS =====
+function buyWeapon(weaponId) {
+  const w = WEAPONS.find(x => x.id === weaponId);
+  if (!w) return;
+  if (G.cash < w.cost) { notify(`Need ${fmt(w.cost)}!`, 'bad'); return; }
+  G.cash -= w.cost;
+  G.ownedWeapons[weaponId] = (G.ownedWeapons[weaponId] || 0) + 1;
+  addXP(50);
+  addLog(`Bought ${w.name} for ${fmt(w.cost)}`, '');
+  renderAll();
+}
+
+// ===== LAUNDER =====
+function launderMoney() {
+  const amt = parseInt(document.getElementById('launderAmount').value) || 0;
+  if (amt <= 0) { notify('Enter an amount!', 'bad'); return; }
+  if (G.cash < amt) { notify('Not enough cash!', 'bad'); return; }
+  const maxToday = getLaunderMax() - G.launderToday;
+  const actual = Math.min(amt, maxToday);
+  if (actual <= 0) { notify('Hit daily launder limit!', 'bad'); return; }
+
+  const fee = actual * (1 - getLaunderRate());
+  const clean = actual - fee;
+  G.cash -= actual;
+  G.bank += clean;
+  G.launderToday += actual;
+  addHeat(-1);
+  addLog(`Laundered ${fmt(actual)} → ${fmt(clean)} clean (${Math.floor(getLaunderRate()*100)}% rate)`, 'good');
+  renderAll();
+}
+
+function depositAll() {
+  const amt = G.cash;
+  if (amt <= 0) { notify('No cash to deposit!', 'bad'); return; }
+  const maxToday = getLaunderMax() - G.launderToday;
+  const actual = Math.min(amt, maxToday);
+  const fee = actual * (1 - getLaunderRate());
+  const clean = actual - fee;
+  G.cash -= actual;
+  G.bank += clean;
+  G.launderToday += actual;
+  addLog(`Deposited ${fmt(actual)} → ${fmt(clean)} clean`, 'good');
+  renderAll();
+}
+
+function buyLaunderUpgrade(id) {
+  const u = LAUNDER_UPGRADES.find(x => x.id === id);
+  if (!u || u.done) return;
+  if (G.cash + G.bank < u.cost) { notify(`Need ${fmt(u.cost)}!`, 'bad'); return; }
+  if (G.cash >= u.cost) G.cash -= u.cost;
+  else { G.bank -= (u.cost - G.cash); G.cash = 0; }
+  u.done = true;
+  notify(`✅ Purchased ${u.name}!`, 'good');
+  renderAll();
+}
+
+// ===== POLICE RAID =====
+function policeRaid() {
+  if (G.heat < 90) return;
+  const defense = getTotalDefense() + (G.crew.lookout ? 20 : 0) + (G.crew.lawyer ? 30 : 0);
+  const raidPower = Math.random() * 100 - defense;
+
+  if (raidPower > 50) {
+    const seized = Math.floor(Math.random() * 0.5 * G.cash);
+    const drugLoss = Math.floor(Math.random() * 0.3 * getTotalInventory());
+    G.cash -= seized;
+    // Remove some inventory
+    let removed = drugLoss;
+    Object.keys(G.inventory).forEach(k => {
+      if (removed > 0) {
+        const take = Math.min(removed, G.inventory[k]);
+        G.inventory[k] -= take;
+        removed -= take;
+      }
+    });
+    G.heat = Math.max(0, G.heat - 40);
+    notify(`🚨 POLICE RAID! Lost ${fmt(seized)} and ${drugLoss} units!`, 'bad');
+    addLog(`RAIDED — lost ${fmt(seized)} cash and drugs`, 'bad');
+  } else {
+    G.heat = Math.max(0, G.heat - 30);
+    notify(`🚨 Police tried to raid but failed! Heat reduced.`, 'warn');
+    addLog(`Police raid repelled by crew`, 'warn');
+  }
+  renderAll();
+}
+
+function heal() {
+  const cost = (G.maxHealth - G.health) * 50;
+  if (cost <= 0) { notify('Already at full health!', ''); return; }
+  if (G.cash < cost) { notify(`Need ${fmt(cost)} to heal fully!`, 'bad'); return; }
+  G.cash -= cost;
+  G.health = G.maxHealth;
+  addLog(`Healed to full health for ${fmt(cost)}`, 'good');
+  renderAll();
+}
+
+// ===== RENDER FUNCTIONS =====
+function renderMarket() {
+  const grid = document.getElementById('drugGrid');
+  if (!grid) return;
+  grid.innerHTML = DRUGS.map(d => {
+    const price = marketPrices[d.id];
+    const change = price - d.basePrice;
+    const pct = ((change / d.basePrice) * 100).toFixed(1);
+    const inv = G.inventory[d.id] || 0;
+    const profit = price - d.buyPrice;
+    return `
+    <div class="drug-card" data-tier="${d.tier}">
+      <div class="drug-name">${d.emoji} ${d.name}</div>
+      <div class="drug-price">${fmt(Math.floor(price))}/unit 
+        <span class="price-change ${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '▲' : '▼'}${Math.abs(pct)}%</span>
+      </div>
+      <div class="drug-info">Buy: ${fmt(d.buyPrice)} | Profit: ${fmt(profit)} | Tier ${d.tier}</div>
+      <div class="drug-stock"><span>In stock: <b>${inv}</b></span><span style="color:var(--muted);font-size:11px">Risk: ${(d.riskMult * 100).toFixed(0)}%</span></div>
+      <div class="qty-control">
+        <label>QTY</label>
+        <input type="number" id="buy_${d.id}" value="5" min="1" max="999">
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-green btn-sm" style="flex:1" onclick="buyDrug('${d.id}')">BUY</button>
+        <input type="number" id="sell_${d.id}" value="${Math.min(5, inv)}" min="1" max="${inv}" style="width:50px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px;font-family:Rajdhani;text-align:center">
+        <button class="btn btn-red btn-sm" style="flex:1" onclick="sellDrug('${d.id}')" ${inv <= 0 ? 'disabled' : ''}>SELL</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderInventory() {
+  const el = document.getElementById('inventoryDisplay');
+  if (!el) return;
+  const items = Object.entries(G.inventory).filter(([k, v]) => v > 0);
+  if (items.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:12px">No inventory. Buy drugs to get started.</div>';
+    return;
+  }
+  el.innerHTML = items.map(([id, qty]) => {
+    const d = DRUGS.find(x => x.id === id);
+    if (!d || qty <= 0) return '';
+    const val = Math.floor(marketPrices[id] * qty);
+    return `<div class="info-row">
+      <span class="label">${d.emoji} ${d.name}</span>
+      <span class="value">${qty} units <span style="color:var(--green);font-size:11px">(${fmt(val)})</span></span>
+    </div>`;
+  }).join('');
+}
+
+function renderLab() {
+  const el = document.getElementById('labRecipes');
+  if (!el) return;
+  el.innerHTML = RECIPES.map(r => {
+    const rm = G.rawMaterials;
+    const canMake = rm.precursors >= r.precursors && rm.chemicals >= r.chemicals && rm.equipment >= r.equipment && G.labLevel >= r.labLevel;
+    const drug = DRUGS.find(d => d.id === r.drug);
+    return `<div class="recipe-card">
+      <div class="recipe-name">${r.emoji} ${r.name}</div>
+      <div class="ingredient ${rm.precursors >= r.precursors ? 'have' : 'missing'}">Precursors: ${r.precursors} (have: ${rm.precursors})</div>
+      <div class="ingredient ${rm.chemicals >= r.chemicals ? 'have' : 'missing'}">Chemicals: ${r.chemicals} (have: ${rm.chemicals})</div>
+      <div class="ingredient ${rm.equipment >= r.equipment ? 'have' : 'missing'}">Equipment: ${r.equipment} (have: ${rm.equipment})</div>
+      ${G.labLevel < r.labLevel ? `<div style="color:var(--red);font-size:11px;margin-top:4px">⚠️ Requires Lab Level ${r.labLevel}</div>` : ''}
+      <div style="color:var(--accent);font-size:12px;margin-top:4px">Yield per run: ~${r.yield} units of ${drug.name}</div>
+      <div style="display:flex;gap:4px;margin-top:6px;align-items:center;flex-wrap:wrap">
+        <input type="number" id="mfg_qty_${r.id}" value="1" min="1" max="${getMaxRuns(r)}" style="width:55px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font-family:Rajdhani;font-size:13px;text-align:center">
+        <button class="btn btn-green btn-sm" style="flex:1" onclick="manufacture('${r.id}', parseInt(document.getElementById('mfg_qty_${r.id}').value)||1)" ${canMake ? '' : 'disabled'}>PRODUCE</button>
+        <button class="btn btn-sm" style="flex:1;border-color:var(--accent);color:var(--accent)" onclick="manufactureMax('${r.id}')" ${canMake ? '' : 'disabled'} title="Produce max runs with current materials">MAX</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const rmEl = document.getElementById('rawMaterials');
+  if (rmEl) {
+    const rm = G.rawMaterials;
+    rmEl.innerHTML = `
+      <div class="info-row"><span class="label">🧪 Precursors</span><span class="value">${rm.precursors}</span></div>
+      <div class="info-row"><span class="label">⚗️ Chemicals</span><span class="value">${rm.chemicals}</span></div>
+      <div class="info-row"><span class="label">🔧 Equipment</span><span class="value">${rm.equipment}</span></div>
+    `;
+  }
+
+  document.getElementById('labLevel').textContent = G.labLevel;
+  document.getElementById('supplyBundleCost').textContent = getSupplyCost().toLocaleString();
+
+  const upgradeBtn = document.querySelector('#tab-manufacture .panel:first-child');
+  if (upgradeBtn && G.labLevel < 4) {
+    const btnId = 'labUpgradeBtn';
+    let btn = document.getElementById(btnId);
+    if (!btn) {
+      const b = document.createElement('button');
+      b.id = btnId;
+      b.className = 'btn btn-accent';
+      b.style.marginTop = '12px';
+      b.onclick = upgradeLabLevel;
+      upgradeBtn.appendChild(b);
+      btn = b;
+    }
+    btn.textContent = `Upgrade Lab to Level ${G.labLevel + 1} — ${fmt(G.labLevel * 5000)}`;
+  }
+}
+
+function renderTerritory() {
+  const grid = document.getElementById('territoryGrid');
+  if (!grid) return;
+  grid.innerHTML = TERRITORIES.map(t => {
+    const state = G.territories[t.id];
+    const owned = state === 'owned';
+    const contested = state === 'contested';
+    const cls = owned ? 'owned' : (contested ? 'contested' : '');
+    const emoji = owned ? '✅' : (contested ? '⚔️' : '❌');
+    return `<div class="territory-cell ${cls}">
+      <div class="territory-name">${emoji} ${t.name}</div>
+      <div class="territory-income">${fmt(t.baseIncome)}/day</div>
+      <div class="territory-ctrl">Risk: ${Math.floor(t.risk*100)}%</div>
+      ${contested ? `<button class="btn btn-red btn-sm" style="margin-top:4px;font-size:9px" onclick="defendTerritory('${t.id}')">DEFEND</button>` :
+        !owned ? `<button class="btn btn-sm" style="margin-top:4px;font-size:9px" onclick="captureTerritory('${t.id}')">TAKE</button>` :
+        `<div style="font-size:9px;color:var(--green);margin-top:4px">OWNED</div>`}
+    </div>`;
+  }).join('');
+
+  document.getElementById('ownedTerritories').textContent = getOwnedTerritories();
+
+  const incEl = document.getElementById('territoryIncome');
+  if (incEl) {
+    const owned = TERRITORIES.filter(t => G.territories[t.id] === 'owned');
+    if (owned.length === 0) {
+      incEl.innerHTML = '<div style="color:var(--muted);font-size:12px">No territories owned yet. Take over areas to earn passive income.</div>';
+    } else {
+      incEl.innerHTML = `
+        <div class="info-row"><span class="label">Territories Owned</span><span class="value">${owned.length}/20</span></div>
+        <div class="info-row"><span class="label">Total Daily Income</span><span class="value green">${fmt(getTerritoryIncome())}/day</span></div>
+        ${owned.map(t => `<div class="info-row"><span class="label">${t.name}</span><span class="value green">${fmt(t.baseIncome)}/day</span></div>`).join('')}
+      `;
+    }
+  }
+}
+
+function renderCrew() {
+  const hireEl = document.getElementById('crewHire');
+  if (hireEl) {
+    hireEl.innerHTML = CREW_TYPES.map(ct => {
+      const count = G.crew[ct.id] || 0;
+      return `<div class="crew-card">
+        <div class="crew-name">${ct.emoji} ${ct.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${ct.desc}</div>
+        <div class="crew-stats">
+          ${ct.firepower ? `<span>🔫 ${ct.firepower}</span>` : ''}
+          ${ct.defense ? `<span>🛡️ ${ct.defense}</span>` : ''}
+          ${ct.income ? `<span>💰 +${fmt(ct.income)}/day</span>` : ''}
+          ${ct.heatReduce ? `<span>🧊 -${ct.heatReduce}heat/day</span>` : ''}
+          ${ct.launderBonus ? `<span>💵 +${ct.launderBonus*100}% launder</span>` : ''}
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+          <span style="color:var(--accent);font-size:13px;font-weight:700">${fmt(ct.cost)}</span>
+          <span style="color:var(--muted);font-size:11px">Wage: ${fmt(ct.wage)}/day</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:6px">
+          <button class="btn btn-green btn-sm" style="flex:1" onclick="hireCrew('${ct.id}')">HIRE</button>
+          <span class="crew-count">${count}</span>
+          <button class="btn btn-red btn-sm" onclick="fireCrew('${ct.id}')" ${count <= 0 ? 'disabled' : ''}>FIRE</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const rosterEl = document.getElementById('crewRoster');
+  if (rosterEl) {
+    const entries = Object.entries(G.crew).filter(([k, v]) => v > 0);
+    if (entries.length === 0) {
+      rosterEl.innerHTML = '<div style="color:var(--muted);font-size:12px">No crew hired. Hire crew to build your empire.</div>';
+    } else {
+      rosterEl.innerHTML = entries.map(([id, count]) => {
+        const ct = CREW_TYPES.find(c => c.id === id);
+        return `<div class="info-row"><span class="label">${ct.emoji} ${ct.name}</span><span class="value">${count}x</span></div>`;
+      }).join('');
+    }
+  }
+
+  const wages = getDailyWages();
+  if (document.getElementById('weeklyWages')) document.getElementById('weeklyWages').textContent = fmt(wages) + '/day';
+  if (document.getElementById('totalFirepower')) document.getElementById('totalFirepower').textContent = getTotalFirepower();
+  if (document.getElementById('totalDefense')) document.getElementById('totalDefense').textContent = getTotalDefense();
+}
+
+function renderMissions() {
+  const el = document.getElementById('missionList');
+  if (!el) return;
+  el.innerHTML = MISSIONS.map(m => {
+    const meetsLevel = G.level >= (m.req.minLevel || 1);
+    const meetsFP = !m.req.firepower || getTotalFirepower() >= m.req.firepower;
+    const meetsResp = !m.req.respect || G.respect >= m.req.respect;
+    const meetsCash = !m.req.cash || G.cash >= m.req.cash;
+    const meetsTerr = !m.req.territories || getOwnedTerritories() >= m.req.territories;
+    const canDo = meetsLevel && meetsFP && meetsResp && meetsCash && meetsTerr;
+
+    let reqText = [];
+    if (!meetsLevel) reqText.push(`Level ${m.req.minLevel}`);
+    if (!meetsFP) reqText.push(`${m.req.firepower} Firepower`);
+    if (!meetsResp) reqText.push(`${m.req.respect} Respect`);
+    if (!meetsCash) reqText.push(`${fmt(m.req.cash)} Cash`);
+    if (!meetsTerr) reqText.push(`${m.req.territories} Territories`);
+
+    const rewardParts = [];
+    if (m.reward) rewardParts.push(`💰 ${fmt(m.reward)}`);
+    if (m.xp) rewardParts.push(`⭐ ${m.xp} XP`);
+    if (m.respect) rewardParts.push(`👊 ${m.respect} Respect`);
+    if (m.heatReduce > 0) rewardParts.push(`🧊 -${m.heatReduce} Heat`);
+    if (m.drugReward) rewardParts.push(`💊 ${m.drugReward.qty}x ${m.drugReward.type}`);
+    if (m.req.cash) rewardParts.push(`💸 Costs ${fmt(m.req.cash)}`);
+
+    return `<div class="mission-card">
+      <div class="mission-icon">${m.emoji}</div>
+      <div class="mission-info">
+        <div class="mission-name">${m.name}</div>
+        <div class="mission-desc">${m.desc}</div>
+        <div class="mission-rewards">${rewardParts.join(' | ')}</div>
+        ${reqText.length > 0 ? `<div class="mission-risk">⚠️ Requires: ${reqText.join(', ')}</div>` : `<div class="mission-risk">Risk: ${Math.floor(m.risk*100)}% chance of failure</div>`}
+      </div>
+      <div class="mission-actions">
+        <button class="btn ${canDo ? 'btn-accent' : ''} btn-sm" onclick="doMission('${m.id}')" ${canDo ? '' : 'disabled'}>EXECUTE</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const doneEl = document.getElementById('completedMissions');
+  if (doneEl) {
+    if (G.completedMissions.length === 0) {
+      doneEl.textContent = 'No missions completed yet.';
+    } else {
+      doneEl.innerHTML = G.completedMissions.map(id => {
+        const m = MISSIONS.find(x => x.id === id);
+        return `<span style="margin-right:12px">${m.emoji} ${m.name}</span>`;
+      }).join('');
+    }
+  }
+}
+
+function renderProperties() {
+  const el = document.getElementById('propertyList');
+  if (!el) return;
+  el.innerHTML = PROPERTIES.map(p => {
+    const owned = G.ownedProperties.includes(p.id);
+    const canAfford = (G.cash + G.bank) >= p.cost;
+    const perks = [];
+    if (p.incomePerDay) perks.push(`💰 ${fmt(p.incomePerDay)}/day`);
+    if (p.launderBonus) perks.push(`🏦 +${fmt(p.launderBonus)} launder`);
+    if (p.heatReduce) perks.push(`🧊 -${p.heatReduce} heat/day`);
+    if (p.storageBonus) perks.push(`📦 +${p.storageBonus} storage`);
+    if (p.labBonus) perks.push(`🔬 +${p.labBonus} lab level`);
+    if (p.importDiscount) perks.push(`📉 -${p.importDiscount*100}% drug cost`);
+    if (p.drugSaleBonus) perks.push(`📈 +${p.drugSaleBonus*100}% sale price`);
+
+    return `<div class="property-card">
+      <div class="property-name">${p.emoji} ${p.name}</div>
+      ${owned ? '<div class="owned-badge">✓ Owned</div>' : ''}
+      <div class="property-desc">${p.desc}</div>
+      <div class="property-income">${perks.join(' | ')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;margin-top:4px">
+        <span style="color:var(--accent);font-size:15px;font-weight:700">${fmt(p.cost)}</span>
+      </div>
+      <button class="btn ${owned ? '' : (canAfford ? 'btn-accent' : '')} btn-sm" onclick="buyProperty('${p.id}')" ${owned || !canAfford ? 'disabled' : ''}>${owned ? 'OWNED' : canAfford ? 'PURCHASE' : 'INSUFFICIENT'}</button>
+    </div>`;
+  }).join('');
+}
+
+let weaponFilter = 'all';
+
+function filterWeapons(cat) {
+  weaponFilter = cat;
+  document.querySelectorAll('[id^="wf-"]').forEach(b => {
+    b.style.borderColor = ''; b.style.color = '';
+  });
+  const btn = document.getElementById('wf-' + cat);
+  if (btn) { btn.style.borderColor = 'var(--accent)'; btn.style.color = 'var(--accent)'; }
+  renderWeapons();
+}
+
+function renderWeapons() {
+  const el = document.getElementById('weaponList');
+  if (!el) return;
+  const filtered = weaponFilter === 'all' ? WEAPONS : WEAPONS.filter(w => w.cat === weaponFilter);
+  el.innerHTML = filtered.map(w => {
+    const qty = G.ownedWeapons[w.id] || 0;
+    const canAfford = G.cash >= w.cost;
+    const catColors = { pistol:'cat-pistol', shotgun:'cat-shotgun', smg:'cat-smg', rifle:'cat-rifle', sniper:'cat-sniper', heavy:'cat-heavy', gear:'cat-gear' };
+    const statsHtml = [
+      w.firepower ? `<span class="stat-pill">🔫${w.firepower}</span>` : '',
+      w.defense ? `<span class="stat-pill">🛡️${w.defense}</span>` : '',
+      w.accuracy ? `<span class="stat-pill">🎯${w.accuracy}%</span>` : '',
+      w.damage ? `<span class="stat-pill">💢${w.damage}dmg</span>` : '',
+      w.range && w.range !== 'none' ? `<span class="stat-pill">📏${w.range}</span>` : '',
+      w.silenced ? `<span class="silenced-badge">SILENT</span>` : '',
+      w.heatReduce ? `<span class="stat-pill">🧊-${w.heatReduce}</span>` : '',
+    ].filter(Boolean).join('');
+    return `<div class="weapon-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <span style="font-size:22px">${w.emoji}</span>
+        <span class="weapon-cat-badge ${catColors[w.cat] || ''}">${w.cat}</span>
+      </div>
+      <div class="weapon-name">${w.name}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;line-height:1.4">${w.desc}</div>
+      <div style="margin-bottom:6px;line-height:1.8">${statsHtml}</div>
+      ${qty > 0 ? `<div style="color:var(--green);font-size:11px;margin-bottom:4px;font-weight:700">✓ Owned: ${qty}</div>` : ''}
+      <div style="color:var(--accent);font-weight:700;font-size:14px;margin-bottom:6px">${fmt(w.cost)}</div>
+      <button class="btn btn-sm ${canAfford ? 'btn-green' : ''}" onclick="buyWeapon('${w.id}')" ${canAfford ? '' : 'disabled'}>BUY</button>
+    </div>`;
+  }).join('');
+
+  const ownedEl = document.getElementById('ownedWeapons');
+  if (ownedEl) {
+    const owned = Object.entries(G.ownedWeapons).filter(([k, v]) => v > 0);
+    if (owned.length === 0) {
+      ownedEl.innerHTML = '<div style="color:var(--muted);font-size:12px">No weapons purchased yet.</div>';
+    } else {
+      let totalFP = 0, totalDef = 0;
+      const rows = owned.map(([id, qty]) => {
+        const w = WEAPONS.find(x => x.id === id);
+        if (!w) return '';
+        totalFP += (w.firepower || 0) * qty;
+        totalDef += (w.defense || 0) * qty;
+        return `<div class="info-row">
+          <span class="label">${w.emoji} ${w.name} ×${qty}</span>
+          <span class="value">${w.firepower?`FP+${w.firepower*qty} `:''}${w.defense?`DEF+${w.defense*qty} `:''}${w.accuracy?`ACC${w.accuracy}%`:''}</span>
+        </div>`;
+      }).join('');
+      ownedEl.innerHTML = rows + `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;gap:20px">
+          <div><span style="color:var(--muted);font-size:11px">TOTAL FP</span><br><span style="color:var(--accent);font-weight:700;font-size:18px">${totalFP}</span></div>
+          <div><span style="color:var(--muted);font-size:11px">TOTAL DEF</span><br><span style="color:var(--green);font-weight:700;font-size:18px">${totalDef}</span></div>
+        </div>`;
+    }
+  }
+}
+
+// ===== COMBAT TARGETS =====
+const COMBAT_TARGETS = [
+  { id: 'street_punk', name: 'Street Punk', emoji: '🧢', diff: 'easy', hp: 30, armor: 0, reward: 200, xp: 80, respect: 3, heatAdd: 5, desc: 'Low-level thug. Barely armed.', crewReq: 0, witnesses: 0.3 },
+  { id: 'rival_dealer', name: 'Rival Dealer', emoji: '💼', diff: 'easy', hp: 45, armor: 5, reward: 500, xp: 150, respect: 8, heatAdd: 8, desc: 'Competition on your corner. Has a pistol.', crewReq: 0, witnesses: 0.4 },
+  { id: 'informant', name: 'Police Informant', emoji: '🐀', diff: 'easy', hp: 25, armor: 0, reward: 800, xp: 200, respect: 12, heatAdd: -15, desc: 'Taking out rats reduces heat.', crewReq: 0, witnesses: 0.2 },
+  { id: 'debt_collector', name: 'Debt Collector', emoji: '💰', diff: 'medium', hp: 60, armor: 10, reward: 1200, xp: 250, respect: 15, heatAdd: 12, desc: 'Muscle from a loan shark. Packs heat.', crewReq: 2, witnesses: 0.5 },
+  { id: 'rival_shooter', name: 'Rival Shooter', emoji: '🔫', diff: 'medium', hp: 80, armor: 15, reward: 1800, xp: 350, respect: 20, heatAdd: 15, desc: 'Enemy gunman. Combat trained.', crewReq: 3, witnesses: 0.4 },
+  { id: 'gang_captain', name: 'Gang Captain', emoji: '🎖️', diff: 'medium', hp: 120, armor: 20, reward: 3000, xp: 600, respect: 35, heatAdd: 18, desc: 'Mid-level boss with crew protection.', crewReq: 5, witnesses: 0.5 },
+  { id: 'cartel_lieutenant', name: 'Cartel Lieutenant', emoji: '⭐', diff: 'hard', hp: 180, armor: 30, reward: 6000, xp: 1000, respect: 60, heatAdd: 25, desc: 'Experienced cartel operator. Will fight back hard.', crewReq: 8, witnesses: 0.6 },
+  { id: 'dea_agent', name: 'DEA Agent', emoji: '🕵️', diff: 'hard', hp: 150, armor: 40, reward: 0, xp: 1500, respect: 80, heatAdd: -30, desc: 'Undercover fed. Killing one is war — and clears investigation.', crewReq: 10, witnesses: 0.3 },
+  { id: 'rival_boss', name: 'Rival Cartel Boss', emoji: '👑', diff: 'hard', hp: 250, armor: 35, reward: 15000, xp: 2500, respect: 120, heatAdd: 35, desc: 'Enemy kingpin. Has full security detail.', crewReq: 15, witnesses: 0.7 },
+  { id: 'corrupt_cop', name: 'Corrupt Cop', emoji: '👮', diff: 'medium', hp: 100, armor: 25, reward: 2000, xp: 400, respect: 25, heatAdd: 20, desc: 'Dirty cop shaking you down. Time to put him down.', crewReq: 5, witnesses: 0.5 },
+  { id: 'cartel_hitman', name: 'Enemy Hitman', emoji: '🎯', diff: 'extreme', hp: 200, armor: 20, reward: 10000, xp: 2000, respect: 100, heatAdd: 30, desc: 'Professional killer sent to eliminate you.', crewReq: 12, witnesses: 0.2 },
+  { id: 'federal_witness', name: 'Federal Witness', emoji: '📋', diff: 'extreme', hp: 80, armor: 0, reward: 25000, xp: 3000, respect: 150, heatAdd: -20, desc: 'About to testify against your cartel. Must not reach court.', crewReq: 20, witnesses: 0.1 },
+];
+
+// ===== APPROACH TYPES =====
+const APPROACHES = [
+  { id: 'direct', name: '🔥 Direct Assault', desc: 'Go in loud. Maximum firepower.', heatMult: 1.5, successBonus: 0.15, witnessBonus: 0.4, crewLossMult: 1.2 },
+  { id: 'ambush', name: '🌑 Ambush', desc: 'Wait for the right moment. Surprise attack.', heatMult: 1.0, successBonus: 0.25, witnessBonus: 0.2, crewLossMult: 0.8 },
+  { id: 'sneak', name: '👤 Stealth', desc: 'Silent approach. Minimal witnesses.', heatMult: 0.5, successBonus: 0.1, witnessBonus: 0.05, crewLossMult: 0.5 },
+  { id: 'drive_by', name: '🚗 Drive-By', desc: 'Hit from a moving vehicle. Fast escape.', heatMult: 1.2, successBonus: 0.05, witnessBonus: 0.5, crewLossMult: 0.6 },
+  { id: 'sniper', name: '🎯 Long-Range Shot', desc: 'Execute from distance. No confrontation.', heatMult: 0.3, successBonus: 0.2, witnessBonus: 0.02, crewLossMult: 0.1 },
+  { id: 'car_bomb', name: '💣 Car Bomb', desc: 'Plant explosives. Remote detonation.', heatMult: 2.0, successBonus: 0.35, witnessBonus: 0.6, crewLossMult: 0.0 },
+  { id: 'poison', name: '☠️ Poisoning', desc: 'Slow and untraceable method.', heatMult: 0.2, successBonus: 0.15, witnessBonus: 0.01, crewLossMult: 0.0 },
+];
+
+// ===== KILL OUTCOMES =====
+const KILL_OUTCOMES_SUCCESS = [
+  (t, w, a) => ({ title: '💀 CLEAN KILL', desc: `Your ${w.name} barked once. ${t.name} dropped before they knew what hit them. Professional.`, critical: false }),
+  (t, w, a) => ({ title: '🩸 HEADSHOT', desc: `Perfect shot between the eyes. ${t.name} was dead before they hit the pavement. Crew erupts.`, critical: true, headshot: true }),
+  (t, w, a) => ({ title: '⚡ AMBUSH SUCCESSFUL', desc: `Caught ${t.name} completely off guard. They never had a chance to reach for their weapon.`, critical: false }),
+  (t, w, a) => ({ title: '🔥 EXECUTION', desc: `${t.name} was dragged to their knees. Your ${w.name} made it official. Send the message.`, critical: false }),
+  (t, w, a) => ({ title: '🎯 PRECISION ELIMINATION', desc: `${w.name} at distance. ${t.name} crumpled without a sound. Ghost operation.`, critical: true }),
+  (t, w, a) => ({ title: '💣 TOTAL ELIMINATION', desc: `The ${w.name} left nothing to identify. ${t.name}'s crew scattered in terror.`, critical: false }),
+  (t, w, a) => ({ title: '🗡️ SILENT TAKEDOWN', desc: `No shots fired. No witnesses. ${t.name} simply disappeared. Your reputation grows.`, critical: true }),
+  (t, w, a) => ({ title: '🚗 DRIVE-BY SUCCESS', desc: `The ${w.name} sprayed from the window as the car accelerated. ${t.name} didn't survive.`, critical: false }),
+  (t, w, a) => ({ title: '😱 SEND A MESSAGE', desc: `${t.name} was made an example. Their crew saw everything. Word spreads through the streets.`, critical: false }),
+  (t, w, a) => ({ title: '👑 DOMINANT KILL', desc: `You personally pulled the trigger on ${t.name}. Absolute power statement. Respect skyrockets.`, critical: true }),
+];
+
+const KILL_OUTCOMES_FAIL = [
+  (t, w, a) => ({ title: '💨 TARGET ESCAPED', desc: `${t.name} spotted your crew and bolted. They're going to warn their people.`, heatAdd: 10 }),
+  (t, w, a) => ({ title: '🚨 POLICE INTERRUPTED', desc: `Sirens before you could finish the job. ${t.name} survived but cops saw everything.`, heatAdd: 25 }),
+  (t, w, a) => ({ title: '🩹 WOUNDED NOT DEAD', desc: `${t.name} took a hit but crawled away. Now they're in hospital — and talking.`, heatAdd: 15 }),
+  (t, w, a) => ({ title: '❌ CREW BETRAYED YOU', desc: `One of your men tipped off ${t.name}. They were ready and waiting. Internal leak.`, heatAdd: 8 }),
+  (t, w, a) => ({ title: '💥 WEAPON JAMMED', desc: `The ${w.name} misfired at the critical moment. ${t.name} got away while your man cleared the jam.`, heatAdd: 5 }),
+  (t, w, a) => ({ title: '👁️ TOO MANY WITNESSES', desc: `The location was crawling with civilians. Couldn't get a clean shot. Mission aborted.`, heatAdd: 10 }),
+  (t, w, a) => ({ title: '🛡️ HEAVY SECURITY', desc: `${t.name} had more guards than intel suggested. Your crew was outgunned and had to retreat.`, heatAdd: 12 }),
+  (t, w, a) => ({ title: '🚁 DEA SURVEILLANCE', desc: `The whole block was under federal surveillance. Mission blown before it started.`, heatAdd: 30 }),
+];
+
+const KILL_OUTCOMES_CRITICAL = [
+  (t, w, a) => ({ title: '💀💀 MASSACRE', desc: `Collateral damage. ${t.name} and their whole crew wiped out. Streets run red. No witnesses to complain.`, extraRespect: 30, extraHeat: 20 }),
+  (t, w, a) => ({ title: '🎖️ LEGENDARY HIT', desc: `The kill shot echoed through the city. Everyone knows who pulled that trigger. You're untouchable now.`, extraRespect: 50, extraXP: 500 }),
+  (t, w, a) => ({ title: '☠️ CARTEL STATEMENT', desc: `The body was displayed publicly. A clear message to all rivals: this city belongs to you.`, extraRespect: 40, extraHeat: 15 }),
+  (t, w, a) => ({ title: '🔥 WAR DECLARATION', desc: `The kill triggers a cartel war. Your crew gains territory as rivals retreat in fear.`, extraRespect: 35, territoryGain: true }),
+  (t, w, a) => ({ title: '💎 CLEAN OPERATION', desc: `Zero witnesses. Zero evidence. Zero heat. The most professional operation your crew has ever run.`, extraRespect: 25, heatReduce: 20 }),
+];
+
+// ===== RENDER COMBAT =====
+function renderCombat() {
+  renderTargetList();
+  renderApproaches();
+  populateWeaponSelect();
+  renderCombatStats();
+  renderKillFeed();
+  renderActiveCombatEvents();
+}
+
+function renderTargetList() {
+  const el = document.getElementById('targetList');
+  if (!el) return;
+  el.innerHTML = COMBAT_TARGETS.map(t => {
+    const diffMap = { easy: 'diff-easy', medium: 'diff-medium', hard: 'diff-hard', extreme: 'diff-extreme' };
+    const selected = G.selectedTarget === t.id;
+    const crewOk = getCrewCount() >= t.crewReq;
+    return `<div class="target-card ${selected ? 'selected' : ''}" onclick="selectTarget('${t.id}')" style="${crewOk ? '' : 'opacity:0.5'}">
+      <div style="display:flex;gap:6px;align-items:flex-start">
+        <span style="font-size:22px;flex-shrink:0">${t.emoji}</span>
+        <div style="flex:1;min-width:0">
+          <div class="target-name">${t.name}</div>
+          <div class="target-difficulty ${diffMap[t.diff]}">${t.diff.toUpperCase()}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;line-height:1.3">${t.desc}</div>
+          <div class="target-reward">+${fmt(t.reward)} | +${t.xp}xp | +${t.respect}rep</div>
+          <div class="target-threat">HP: ${t.hp} | Armor: ${t.armor} | Crew needed: ${t.crewReq}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectTarget(id) {
+  G.selectedTarget = id;
+  renderTargetList();
+}
+
+function renderApproaches() {
+  const el = document.getElementById('approachList');
+  if (!el) return;
+  el.innerHTML = APPROACHES.map(a => {
+    const selected = G.selectedApproach === a.id;
+    return `<button class="approach-btn ${selected ? 'selected' : ''}" onclick="selectApproach('${a.id}')" title="${a.desc}">${a.name}</button>`;
+  }).join('');
+}
+
+function selectApproach(id) {
+  G.selectedApproach = id;
+  renderApproaches();
+}
+
+function populateWeaponSelect() {
+  const sel = document.getElementById('combatWeaponSelect');
+  if (!sel) return;
+  const ownedGuns = Object.entries(G.ownedWeapons).filter(([id, qty]) => qty > 0);
+  sel.innerHTML = '<option value="">-- Choose Weapon --</option>' +
+    ownedGuns.map(([id, qty]) => {
+      const w = WEAPONS.find(x => x.id === id);
+      if (!w) return '';
+      return `<option value="${id}">${w.emoji} ${w.name} (DMG:${w.damage||0} ACC:${w.accuracy||0}% ${w.silenced?'[SILENT]':''}) ×${qty}</option>`;
+    }).join('');
+  if (G.selectedWeapon) sel.value = G.selectedWeapon;
+  sel.onchange = () => { G.selectedWeapon = sel.value; };
+}
+
+function renderCombatStats() {
+  const el = document.getElementById('combatStats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="info-row"><span class="label">🔫 Total Firepower</span><span class="value">${getTotalFirepower()}</span></div>
+    <div class="info-row"><span class="label">🛡️ Total Defense</span><span class="value">${getTotalDefense()}</span></div>
+    <div class="info-row"><span class="label">💀 Total Kills</span><span class="value red">${G.kills}</span></div>
+    <div class="info-row"><span class="label">🎯 Headshots</span><span class="value">${G.headshotKills}</span></div>
+    <div class="info-row"><span class="label">👤 Silent Kills</span><span class="value">${G.silentKills}</span></div>
+    <div class="info-row"><span class="label">✅ Combat Wins</span><span class="value green">${G.combatWins}</span></div>
+    <div class="info-row"><span class="label">❌ Combat Losses</span><span class="value red">${G.combatLosses}</span></div>
+    <div class="info-row"><span class="label">☠️ Body Count</span><span class="value red">${G.bodyCount}</span></div>
+    <div class="info-row"><span class="label">💔 Crew Lost</span><span class="value">${G.crewLostInCombat}</span></div>
+    <div class="info-row"><span class="label">❤️ Your Health</span><span class="value ${G.health < 40 ? 'red' : 'green'}">${G.health}/${G.maxHealth}</span></div>
+  `;
+}
+
+function renderKillFeed() {
+  const el = document.getElementById('killFeed');
+  if (!el) return;
+  if (G.killFeedEntries.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px">No kills yet. Execute a hit to begin.</div>';
+    return;
+  }
+  el.innerHTML = G.killFeedEntries.slice().reverse().map(e => `
+    <div class="kill-entry ${e.type}">
+      <div class="kill-outcome-title">${e.title}</div>
+      <div class="kill-outcome-desc">${e.desc}</div>
+      <div class="kill-rewards" style="color:${e.success ? 'var(--green)' : 'var(--red)'}">
+        ${e.rewardText}
+      </div>
+      <div style="color:var(--muted);font-size:10px;margin-top:2px">${e.time} — ${e.approach} — ${e.weapon}</div>
+    </div>
+  `).join('');
+}
+
+function renderActiveCombatEvents() {
+  const el = document.getElementById('activeCombatEvents');
+  if (!el) return;
+  if (G.activeCombatEvents.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted)">No ongoing conflicts.</div>';
+    return;
+  }
+  el.innerHTML = G.activeCombatEvents.map(e => `
+    <div style="padding:8px;border:1px solid ${e.hostile ? 'var(--red)' : 'var(--accent)'};margin-bottom:6px;font-size:12px">
+      <div style="color:${e.hostile ? 'var(--red)' : 'var(--accent)'};font-weight:700;font-family:Oswald">${e.icon} ${e.title}</div>
+      <div style="color:var(--muted);margin-top:3px">${e.desc}</div>
+      ${e.action ? `<button class="btn btn-red btn-sm" style="margin-top:6px;width:auto;padding:4px 10px" onclick="respondToEvent('${e.id}')">${e.action}</button>` : ''}
+    </div>
+  `).join('');
+}
+
+// ===== EXECUTE KILL =====
+function executeKill() {
+  if (!G.selectedTarget) { notify('Select a target first!', 'bad'); return; }
+  if (!G.selectedWeapon || !G.ownedWeapons[G.selectedWeapon]) { notify('Select a weapon you own!', 'bad'); return; }
+
+  const target = COMBAT_TARGETS.find(t => t.id === G.selectedTarget);
+  const weapon = WEAPONS.find(w => w.id === G.selectedWeapon);
+  const approach = APPROACHES.find(a => a.id === G.selectedApproach);
+
+  if (!target || !weapon || !approach) return;
+
+  // Crew requirement check
+  if (getCrewCount() < target.crewReq) {
+    notify(`Need at least ${target.crewReq} crew members for this hit!`, 'bad');
+    return;
+  }
+
+  // Flash effect
+  const flash = document.createElement('div');
+  flash.className = 'combat-flash';
+  flash.style.background = 'rgba(230,57,70,0.15)';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 600);
+
+  // === CALCULATE SUCCESS CHANCE ===
+  const fp = getTotalFirepower();
+  const def = getTotalDefense();
+  const wAcc = weapon.accuracy || 50;
+  const wDmg = weapon.damage || 20;
+  const isSilenced = weapon.silenced || G.ownedWeapons['silencer_kit'] > 0;
+  const levelBonus = G.level * 3;
+  const crewBonus = Math.min(40, getCrewCount() * 2);
+  const respectBonus = Math.min(20, G.respect * 0.05);
+  const heatPenalty = G.heat > 60 ? (G.heat - 60) * 0.3 : 0;
+
+  // Target effective HP
+  const effectiveHP = target.hp + target.armor - (wDmg * 0.5);
+  const fpScore = (fp * 0.8) + (wAcc * 0.4) + levelBonus + crewBonus + respectBonus - heatPenalty;
+  const baseChance = Math.min(92, Math.max(5, 40 + approach.successBonus * 100 + fpScore * 0.3 - effectiveHP * 0.2));
+
+  const roll = Math.random() * 100;
+  const criticalRoll = Math.random();
+  const success = roll < baseChance;
+  const critical = success && criticalRoll > 0.75;
+  const headshot = success && weapon.accuracy >= 70 && Math.random() > 0.6;
+
+  // Witness chance
+  const witnessChance = target.witnesses * approach.witnessBonus;
+  const witnessed = Math.random() < witnessChance;
+
+  let outcome, rewardText, entryType;
+
+  if (success) {
+    // Pick outcome
+    let outcomeData;
+    if (critical) {
+      const crit = KILL_OUTCOMES_CRITICAL[Math.floor(Math.random() * KILL_OUTCOMES_CRITICAL.length)];
+      outcomeData = crit(target, weapon, approach);
+      // Apply critical extras
+      if (outcomeData.extraRespect) addRespect(outcomeData.extraRespect);
+      if (outcomeData.extraXP) addXP(outcomeData.extraXP);
+      if (outcomeData.heatReduce) addHeat(-outcomeData.heatReduce);
+      if (outcomeData.extraHeat) addHeat(outcomeData.extraHeat);
+      if (outcomeData.territoryGain) {
+        // Grant a random un-owned territory
+        const unowned = TERRITORIES.filter(t => !G.territories[t.id]);
+        if (unowned.length) {
+          const gained = unowned[Math.floor(Math.random() * unowned.length)];
+          G.territories[gained.id] = 'owned';
+          addLog(`Territory gained through war: ${gained.name}`, 'good');
+        }
+      }
+      entryType = 'kill-critical';
+    } else {
+      const ok = KILL_OUTCOMES_SUCCESS[Math.floor(Math.random() * KILL_OUTCOMES_SUCCESS.length)];
+      outcomeData = ok(target, weapon, approach);
+      entryType = 'kill-success';
+    }
+
+    // Apply rewards
+    G.cash += target.reward;
+    G.totalEarnings += target.reward;
+    addXP(target.xp);
+    addRespect(target.respect);
+    G.kills++;
+    G.bodyCount++;
+    G.combatWins++;
+    if (headshot) { G.headshotKills++; outcomeData.title = '🎯 HEADSHOT — ' + outcomeData.title; }
+    if (isSilenced && approach.id === 'sneak') G.silentKills++;
+
+    // Heat from kill
+    let heatFromKill = target.heatAdd * approach.heatMult;
+    if (witnessed) heatFromKill *= 1.5;
+    if (isSilenced) heatFromKill *= 0.4;
+    addHeat(heatFromKill);
+
+    // Crew losses (minimal on success)
+    const crewLost = Math.random() < 0.15 * approach.crewLossMult ? 1 : 0;
+    if (crewLost && getCrewCount() > 0) {
+      const crewKeys = Object.keys(G.crew).filter(k => G.crew[k] > 0);
+      if (crewKeys.length) {
+        const k = crewKeys[Math.floor(Math.random() * crewKeys.length)];
+        G.crew[k]--;
+        if (G.crew[k] === 0) delete G.crew[k];
+        G.crewLostInCombat++;
+        addLog(`Crew member KIA during hit`, 'bad');
+      }
+    }
+
+    const rewardParts = [];
+    if (target.reward) rewardParts.push(`+${fmt(target.reward)}`);
+    rewardParts.push(`+${target.xp}XP`);
+    rewardParts.push(`+${target.respect} Respect`);
+    if (critical) rewardParts.push('✨ CRITICAL');
+    if (headshot) rewardParts.push('🎯 HEADSHOT');
+    if (witnessed) rewardParts.push('👁️ Witnessed');
+    rewardText = rewardParts.join(' | ');
+    outcome = outcomeData;
+
+    notify(`${outcomeData.title} | ${fmt(target.reward)} earned`, 'good');
+    addLog(`HIT SUCCESS: ${target.name} eliminated | ${fmt(target.reward)} | ${approach.name}`, 'good');
+
+  } else {
+    // FAIL
+    const failOC = KILL_OUTCOMES_FAIL[Math.floor(Math.random() * KILL_OUTCOMES_FAIL.length)];
+    outcome = failOC(target, weapon, approach);
+    entryType = 'kill-fail';
+    G.combatLosses++;
+
+    addHeat(outcome.heatAdd || 15);
+
+    // Take damage on fail
+    const dmgTaken = Math.floor(target.hp * 0.3 * Math.random() + 5);
+    const reducedDmg = Math.max(1, dmgTaken - Math.floor(getTotalDefense() * 0.5));
+    G.health = Math.max(1, G.health - reducedDmg);
+
+    // Possible crew loss on fail
+    const crewLostChance = 0.25 * approach.crewLossMult;
+    if (Math.random() < crewLostChance && getCrewCount() > 0) {
+      const ck = Object.keys(G.crew).filter(k => G.crew[k] > 0);
+      if (ck.length) {
+        const k = ck[Math.floor(Math.random() * ck.length)];
+        G.crew[k]--;
+        if (G.crew[k] === 0) delete G.crew[k];
+        G.crewLostInCombat++;
+        addLog(`Crew member KIA — mission failed`, 'bad');
+      }
+    }
+
+    rewardText = `-${reducedDmg}HP | +${outcome.heatAdd || 15} Heat | Mission Failed`;
+    notify(`${outcome.title} — took ${reducedDmg} damage`, 'bad');
+    addLog(`HIT FAILED: ${target.name} | ${outcome.title}`, 'bad');
+  }
+
+  // Add to kill feed
+  const now = new Date().toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+  G.killFeedEntries.push({
+    title: outcome.title,
+    desc: outcome.desc,
+    rewardText,
+    success,
+    type: entryType,
+    time: `Day ${G.day} ${now}`,
+    approach: approach.name,
+    weapon: weapon.name,
+  });
+  if (G.killFeedEntries.length > 30) G.killFeedEntries.shift();
+
+  // Possibly spawn a reactive combat event
+  if (success && Math.random() < 0.25) spawnCombatEvent(target);
+
+  checkAchievements();
+  renderAll();
+}
+
+function spawnCombatEvent(target) {
+  const events = [
+    { id: 'retaliation', hostile: true, icon: '⚔️', title: 'RETALIATION INCOMING', desc: `${target.name}'s crew is mobilizing. They're coming for you. Prepare your defenses.`, action: 'Repel Attack', actionFn: 'repelAttack' },
+    { id: 'contract', hostile: true, icon: '🎯', title: 'HIT CONTRACT ON YOU', desc: 'A rival cartel has placed a bounty on your head. Shooters are looking for you.', action: 'Hunt Them First', actionFn: 'huntBounty' },
+    { id: 'ally_offer', hostile: false, icon: '🤝', title: 'ALLIANCE REQUEST', desc: 'A neutral cartel saw your hit. They want to align with the winning side. Accept?', action: 'Accept Alliance', actionFn: 'acceptAlliance' },
+    { id: 'witness_payment', hostile: false, icon: '💰', title: 'WITNESS WANTS PAYMENT', desc: 'Someone saw the hit and wants $5,000 to stay quiet. Pay or deal with them.', action: 'Pay Witness ($5,000)', actionFn: 'payWitness' },
+    { id: 'war_spoils', hostile: false, icon: '📦', title: 'WAR SPOILS AVAILABLE', desc: `${target.name}'s safe house was abandoned. Send crew to loot it.`, action: 'Loot Safe House', actionFn: 'lootSafehouse' },
+  ];
+  const ev = events[Math.floor(Math.random() * events.length)];
+  // Don't duplicate
+  if (!G.activeCombatEvents.find(e => e.id === ev.id)) {
+    G.activeCombatEvents.push(ev);
+    notify(`${ev.icon} ${ev.title}`, ev.hostile ? 'bad' : 'warn');
+  }
+}
+
+function respondToEvent(eventId) {
+  const ev = G.activeCombatEvents.find(e => e.id === eventId);
+  if (!ev) return;
+  G.activeCombatEvents = G.activeCombatEvents.filter(e => e.id !== eventId);
+
+  switch (ev.id) {
+    case 'retaliation': {
+      const fp = getTotalFirepower() + getTotalDefense();
+      if (fp > 30 || Math.random() < 0.5) {
+        notify('⚔️ Retaliation repelled! Crew held them off.', 'good');
+        addLog('Repelled rival retaliation', 'good');
+        addXP(300); addRespect(20);
+      } else {
+        const dmg = Math.floor(Math.random() * 30 + 10);
+        G.health = Math.max(1, G.health - dmg);
+        addHeat(15);
+        notify(`💥 Retaliation hit hard! Took ${dmg} damage`, 'bad');
+        addLog('Failed to repel retaliation', 'bad');
+      }
+      break;
+    }
+    case 'contract': {
+      const fp = getTotalFirepower();
+      if (fp > 50 || Math.random() < 0.6) {
+        G.cash += 8000; G.totalEarnings += 8000;
+        notify('🎯 Hunted down the hitmen! +$8,000 bounty claimed', 'good');
+        addLog('Killed enemy hitmen — collected bounty', 'good');
+        addXP(500); addRespect(40); G.kills++;
+      } else {
+        const dmg = 20; G.health = Math.max(1, G.health - dmg);
+        notify('⚠️ Hitmen escaped. Stay vigilant.', 'bad');
+      }
+      break;
+    }
+    case 'ally_offer': {
+      addRespect(50); addXP(400);
+      // Grant some passive income
+      G.cash += 3000; G.totalEarnings += 3000;
+      notify('🤝 Alliance accepted! +$3,000 + 50 Respect', 'good');
+      addLog('New cartel alliance formed', 'good');
+      break;
+    }
+    case 'witness_payment': {
+      if (G.cash >= 5000) {
+        G.cash -= 5000; addHeat(-20);
+        notify('💰 Witness paid off. -20 Heat', 'good');
+        addLog('Paid witness to stay silent', '');
+      } else {
+        // Witness talks
+        addHeat(30);
+        notify('⚠️ Couldn\'t pay witness. They talked. +30 Heat', 'bad');
+      }
+      break;
+    }
+    case 'war_spoils': {
+      const cash = Math.floor(Math.random() * 5000 + 2000);
+      const drug = DRUGS[Math.floor(Math.random() * 6)]; // tier 1-2 drugs
+      const qty = Math.floor(Math.random() * 20 + 10);
+      G.cash += cash; G.totalEarnings += cash;
+      G.inventory[drug.id] = (G.inventory[drug.id] || 0) + qty;
+      addHeat(10);
+      notify(`📦 Looted safe house! +${fmt(cash)} + ${qty}x ${drug.name}`, 'good');
+      addLog(`Looted rival safe house: ${fmt(cash)} cash + ${qty}x ${drug.name}`, 'good');
+      break;
+    }
+  }
+  renderAll();
+}
+
+function renderLaunder() {
+  const el = document.getElementById('launderCash');
+  if (el) el.textContent = fmt(G.cash);
+  const bel = document.getElementById('launderBank');
+  if (bel) bel.textContent = fmt(G.bank);
+  const rel = document.getElementById('launderRate');
+  if (rel) rel.textContent = Math.floor(getLaunderRate() * 100) + '%';
+  const mel = document.getElementById('launderMax');
+  if (mel) mel.textContent = fmt(getLaunderMax()) + '/day (used: ' + fmt(G.launderToday) + ')';
+
+  const upgEl = document.getElementById('launderUpgrades');
+  if (upgEl) {
+    upgEl.innerHTML = LAUNDER_UPGRADES.map(u => `
+      <div class="info-row">
+        <span class="label">${u.emoji} ${u.name}</span>
+        <button class="btn btn-sm ${u.done ? '' : 'btn-accent'}" style="width:auto;padding:3px 10px;font-size:10px" onclick="buyLaunderUpgrade('${u.id}')" ${u.done ? 'disabled' : ((G.cash + G.bank) >= u.cost ? '' : 'disabled')}>
+          ${u.done ? '✓ DONE' : fmt(u.cost)}
+        </button>
+      </div>
+      <div style="color:var(--muted);font-size:11px;padding:2px 0 6px">${u.desc}</div>
+    `).join('');
+  }
+
+  const policeEl = document.getElementById('policePanel');
+  if (policeEl) {
+    const heatColor = G.heat > 70 ? 'var(--red)' : G.heat > 40 ? 'var(--accent)' : 'var(--green)';
+    policeEl.innerHTML = `
+      <div class="info-row"><span class="label">Current Heat</span><span class="value" style="color:${heatColor}">${G.heat.toFixed(1)}%</span></div>
+      <div class="bar-wrap heat-bar"><div class="bar-fill" style="width:${G.heat}%;background:${heatColor}"></div></div>
+      <div style="margin-top:8px;color:var(--muted);font-size:12px">
+        ${G.heat < 30 ? '🟢 Low heat — operating safely' :
+          G.heat < 60 ? '🟡 Moderate heat — police are watching' :
+          G.heat < 80 ? '🟠 High heat — risk of raid!' :
+          '🔴 CRITICAL — raid imminent! Reduce heat NOW!'}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-green" onclick="addHeat(-20);addLog('Bribed police officer — -20 heat','good');G.cash-=5000;renderAll()" ${G.cash >= 5000 ? '' : 'disabled'}>Bribe Cop (${fmt(5000)})</button>
+        <button class="btn btn-sm" onclick="addHeat(-10);addLog('Laid low for a day','');renderAll()">Lay Low (-10 heat)</button>
+        <button class="btn btn-sm btn-red" onclick="G.heat=0;G.cash-=50000;addLog('Fled the city! Heat reset to 0','warn');notify('Fled the city! Heat zeroed.','warn');renderAll()" ${G.cash >= 50000 ? '' : 'disabled'}>Flee City (${fmt(50000)})</button>
+      </div>
+    `;
+  }
+}
+
+function renderProfile() {
+  const xpForLevel = getXPNeeded(G.level);
+  let xpInCurrentLevel = G.xp;
+  for (let i = 1; i < G.level; i++) xpInCurrentLevel -= getXPNeeded(i);
+  xpInCurrentLevel = Math.max(0, xpInCurrentLevel);
+  const pct = Math.min(100, (xpInCurrentLevel / xpForLevel) * 100);
+
+  document.getElementById('profileLevel').textContent = G.level;
+  document.getElementById('statLevel').textContent = G.level;
+  document.getElementById('levelTitle').textContent = LEVEL_TITLES[Math.min(G.level, LEVEL_TITLES.length - 1)];
+  document.getElementById('profileXP').textContent = fmtNum(xpInCurrentLevel);
+  document.getElementById('profileXPNeeded').textContent = fmtNum(xpForLevel);
+  document.getElementById('xpBar').style.width = pct + '%';
+  document.getElementById('profileRespect').textContent = fmtNum(G.respect);
+  document.getElementById('profileKills').textContent = G.kills;
+  document.getElementById('profileDrugsSold').textContent = fmtNum(G.totalDrugsSold);
+  document.getElementById('profileEarnings').textContent = fmt(G.totalEarnings);
+  document.getElementById('profileHeat').textContent = G.heat.toFixed(1) + '%';
+  document.getElementById('profileHealth').textContent = G.health + '/' + G.maxHealth;
+  document.getElementById('healthBar').style.width = (G.health / G.maxHealth * 100) + '%';
+
+  const statsEl = document.getElementById('empireStats');
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <div class="info-row"><span class="label">💵 Daily Income</span><span class="value green">${fmt(getTotalIncome())}/day</span></div>
+      <div class="info-row"><span class="label">🏡 Territory Income</span><span class="value green">${fmt(getTerritoryIncome())}/day</span></div>
+      <div class="info-row"><span class="label">💸 Daily Wages</span><span class="value red">${fmt(getDailyWages())}/day</span></div>
+      <div class="info-row"><span class="label">📈 Net Income</span><span class="value ${getTotalIncome() + getTerritoryIncome() - getDailyWages() >= 0 ? 'green' : 'red'}">${fmt(getTotalIncome() + getTerritoryIncome() - getDailyWages())}/day</span></div>
+      <div class="info-row"><span class="label">👥 Crew Size</span><span class="value">${getCrewCount()}</span></div>
+      <div class="info-row"><span class="label">🔫 Total Firepower</span><span class="value">${getTotalFirepower()}</span></div>
+      <div class="info-row"><span class="label">🛡️ Total Defense</span><span class="value">${getTotalDefense()}</span></div>
+      <div class="info-row"><span class="label">🗺️ Territories</span><span class="value">${getOwnedTerritories()}/20</span></div>
+      <div class="info-row"><span class="label">🏢 Properties</span><span class="value">${G.ownedProperties.length}/${PROPERTIES.length}</span></div>
+      <div style="margin-top:10px">
+        <button class="btn btn-green btn-sm" onclick="heal()" style="width:auto;padding:5px 14px">Heal (+HP) — ${fmt((G.maxHealth - G.health) * 50)}</button>
+      </div>
+    `;
+  }
+
+  const achEl = document.getElementById('achievements');
+  if (achEl) {
+    const allAchievements = [
+      // MONEY
+      { id: 'first_sale', name: '🏆 First Sale', desc: 'Sell your first unit' },
+      { id: 'big_earner', name: '💰 Big Earner', desc: 'Earn $10,000 total' },
+      { id: 'hundred_k', name: '💵 Six Figures', desc: 'Earn $100,000 total' },
+      { id: 'millionaire', name: '💎 Millionaire', desc: '$1,000,000 net worth' },
+      { id: 'ten_millionaire', name: '🤑 10 Million Club', desc: 'Earn $10M total' },
+      { id: 'penny_flipper', name: '🪙 Penny Flipper', desc: 'Sell 50 units' },
+      { id: 'drug_baron', name: '💊 Drug Baron', desc: 'Sell 500 units' },
+      { id: 'drug_emperor', name: '⚠️ Drug Emperor', desc: 'Sell 5,000 units' },
+      { id: 'banker', name: '🏦 Banker', desc: '$500K in the bank' },
+      // LEVEL
+      { id: 'crime_lord', name: '👑 Crime Lord', desc: 'Reach level 5' },
+      { id: 'cartel_captain', name: '🎖️ Cartel Captain', desc: 'Reach level 7' },
+      { id: 'kingpin', name: '🌟 Kingpin', desc: 'Reach level 10' },
+      { id: 'el_jefe', name: '🔱 El Jefe', desc: 'Reach level 12' },
+      { id: 'narco_god', name: '😈 Narco God', desc: 'Reach level 15' },
+      // RESPECT
+      { id: 'feared', name: '😈 Feared', desc: '100 respect' },
+      { id: 'notorious', name: '🔥 Notorious', desc: '500 respect' },
+      { id: 'legendary', name: '🌟 Legendary', desc: '2,000 respect' },
+      { id: 'immortal_rep', name: '♾️ Immortal', desc: '10,000 respect' },
+      // PROPERTY
+      { id: 'homeowner', name: '🏠 First Property', desc: 'Own 1 property' },
+      { id: 'empire', name: '🏰 Empire Builder', desc: 'Own 5 properties' },
+      { id: 'tycoon', name: '🏙️ Real Estate Tycoon', desc: 'Own 8 properties' },
+      { id: 'mogul', name: '💼 Business Mogul', desc: 'Own all properties' },
+      // CREW
+      { id: 'gang_starter', name: '👊 Gang Starter', desc: '5 crew members' },
+      { id: 'warlord', name: '⚔️ Warlord', desc: '20 crew members' },
+      { id: 'army_general', name: '🪖 Army General', desc: '50 crew members' },
+      { id: 'hired_sicario', name: '☠️ Sicario Hired', desc: '5+ enforcers' },
+      { id: 'loyal_legion', name: '❤️ Loyal Legion', desc: '100 crew members' },
+      // TERRITORY
+      { id: 'block_owner', name: '📍 Block Owner', desc: 'Own 1 territory' },
+      { id: 'territory_king', name: '🗺️ Territory King', desc: 'Own 10 territories' },
+      { id: 'city_controller', name: '🌆 City Controller', desc: 'Own 15 territories' },
+      { id: 'total_domination', name: '🌎 Total Domination', desc: 'Own all 20 territories' },
+      // COMBAT
+      { id: 'first_blood', name: '🩸 First Blood', desc: 'Execute your first hit' },
+      { id: 'marksman', name: '🎯 Marksman', desc: '5 headshot kills' },
+      { id: 'silent_assassin', name: '🔕 Silent Assassin', desc: '10 silent kills' },
+      { id: 'executioner', name: '💀 Executioner', desc: '25 kills' },
+      { id: 'mass_murderer', name: '☠️ Mass Murderer', desc: '50 body count' },
+      { id: 'ghost', name: '👻 Ghost', desc: '10 kills' },
+      { id: 'war_general', name: '🎖️ War General', desc: '20 combat wins' },
+      { id: 'survivor', name: '🩹 Survivor', desc: 'Lose 5 fights and survive' },
+      { id: 'hitman', name: '🔫 Professional Hitman', desc: '100 kills' },
+      { id: 'death_incarnate', name: '💀 Death Incarnate', desc: '200 body count' },
+      // WEAPONS
+      { id: 'arms_dealer', name: '🔫 Arsenal', desc: 'Own 10+ weapons' },
+      { id: 'gun_nut', name: '⚙️ Gun Nut', desc: 'Own 20+ weapons' },
+      { id: 'full_armory', name: '🪖 Full Armory', desc: 'Own 30+ weapons' },
+      // LAB
+      { id: 'chemist_badge', name: '🧪 Street Chemist', desc: 'Manufacture 100 units' },
+      { id: 'master_cook', name: '🔬 Master Cook', desc: 'Manufacture 1,000 units' },
+      { id: 'lab_king', name: '⚗️ Lab King', desc: 'Max lab level' },
+      // SPECIAL
+      { id: 'untouchable', name: '🛡️ Untouchable', desc: 'Low heat + big earnings' },
+      { id: 'ice_cold', name: '🧊 Ice Cold', desc: '0 heat + $50K earned' },
+      { id: 'clean_money', name: '🏦 Clean Money', desc: '$100K in bank' },
+      { id: 'vip_member', name: '⭐ VIP Member', desc: 'Activate VIP membership' },
+      { id: 'vip_elite', name: '💜 VIP Elite', desc: 'Reach VIP level 5' },
+      { id: 'fleet_owner', name: '🚗 Fleet Owner', desc: 'Own 5 vehicles' },
+      { id: 'jet_setter', name: '✈️ Jet Setter', desc: 'Own the private jet' },
+      { id: 'tank_commander', name: '🪖 Tank Commander', desc: 'Own the armored tank' },
+      { id: 'mission_runner', name: '⚡ Mission Runner', desc: '5 missions completed' },
+      { id: 'mission_veteran', name: '🏅 Mission Veteran', desc: '10 missions completed' },
+    ];
+    const unlocked = allAchievements.filter(a => G.achievements.includes(a.id));
+    const locked = allAchievements.filter(a => !G.achievements.includes(a.id));
+    achEl.innerHTML = `<div style="margin-bottom:6px;font-size:11px;color:var(--accent)">${unlocked.length}/${allAchievements.length} Unlocked</div>` +
+      allAchievements.map(a => {
+        const done = G.achievements.includes(a.id);
+        return `<span style="display:inline-block;margin:2px 4px;padding:3px 8px;border:1px solid ${done ? 'var(--accent)' : 'var(--border)'};color:${done ? 'var(--accent)' : 'var(--muted)'};font-size:10px;font-weight:${done ? '700' : '400'}" title="${a.desc}">${done ? a.name : '🔒 ???'}</span>`;
+      }).join('');
+  }
+
+  const perksEl = document.getElementById('levelPerks');
+  if (perksEl) {
+    const perks = [
+      [1, '🏪 Unlock Street Market', 'Buy and sell all 12 drug types'],
+      [2, '🔬 Unlock Lab (Level 1)', 'Manufacture weed, pills — basic production'],
+      [3, '🗺️ Unlock Territory Capture', 'Earn passive income from districts'],
+      [4, '⚡ Unlock Heist Missions', 'Higher-risk, massive reward operations'],
+      [5, '👥 Unlock Enforcer & Chemist', 'Elite crew roles become available'],
+      [6, '💊 Drug Price Boost +15%', 'Street rep gives you better deals'],
+      [7, '🔫 Unlock Assassination Missions', 'Take out cartel bosses for big rewards'],
+      [8, '🚗 Unlock Premium Vehicles', 'High-end rides for the boss'],
+      [9, '💰 Territory Income +20%', 'Your grip on the streets pays off'],
+      [10, '🗺️ Unlock Full Territory Map', 'Control all 20 districts in the city'],
+      [11, '🧪 Lab Yield +25%', 'Mastery of production processes'],
+      [12, '👮 Unlock DEA Mission', 'Plant false intel, derail investigations'],
+      [13, '🏦 Launder Rate +10%', 'Better money cleaning connections'],
+      [14, '💀 Combat Power +30%', 'Battle-hardened crew fights harder'],
+      [15, '👑 Become the Kingpin Mission', 'Final boss mission unlocks'],
+      [16, '🌡️ Heat Decay +50%', 'You know how to stay under the radar'],
+      [17, '💊 Black Market Bulk Deals', 'Buy drugs in 100-unit batches at discount'],
+      [18, '🔱 Elite Crew Unlock', 'Cartel commandos and spy network roles'],
+      [19, '🏰 Prestige Mode Preview', 'View your legacy stats & prestige options'],
+      [20, '😈 MAX LEVEL — El Padrino', 'All bonuses maximized. You run this city.'],
+    ];
+    perksEl.innerHTML = perks.map(([lvl, name, desc]) => {
+      const active = G.level >= lvl;
+      return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <span style="color:${active ? 'var(--green)' : 'var(--muted)'}">${active ? '✅' : '🔒'} <b>Level ${lvl}:</b> ${name}</span>
+        ${desc ? `<div style="font-size:10px;color:${active ? '#aaa' : 'var(--muted)'};padding-left:18px;margin-top:1px">${desc}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+}
+
+function updateHeader() {
+  document.getElementById('statCash').textContent = fmt(G.cash);
+  document.getElementById('statBank').textContent = fmt(G.bank);
+  document.getElementById('statRespect').textContent = fmtNum(G.respect);
+  document.getElementById('statLevel').textContent = G.level;
+  document.getElementById('statHeat').textContent = G.heat.toFixed(1) + '%';
+  document.getElementById('statInventory').textContent = getTotalInventory();
+  document.getElementById('statCrew').textContent = getCrewCount();
+  document.getElementById('statDay').textContent = G.day;
+}
+
+function updateTicker() {
+  const items = DRUGS.map(d => {
+    const price = marketPrices[d.id];
+    const pct = ((price - d.basePrice) / d.basePrice * 100).toFixed(1);
+    const dir = price >= d.basePrice ? 'up' : 'down';
+    return `<span class="ticker-item ${dir}">${d.emoji} ${d.name}: ${fmt(price)} (${dir === 'up' ? '▲' : '▼'}${Math.abs(pct)}%)</span>`;
+  }).join('');
+  document.getElementById('tickerText').innerHTML = items + items;
+}
+
+function renderAll() {
+  updateHeader();
+  renderInventory();
+  const active = document.querySelector('.tab-content.active');
+  if (active) {
+    const id = active.id.replace('tab-', '');
+    renderTab(id);
+  }
+}
+
+function renderTab(tab) {
+  switch (tab) {
+    case 'street': renderMarket(); renderInventory(); break;
+    case 'manufacture': renderLab(); break;
+    case 'territory': renderTerritory(); break;
+    case 'crew': renderCrew(); break;
+    case 'missions': renderMissions(); break;
+    case 'properties': renderProperties(); break;
+    case 'weapons': renderWeapons(); break;
+    case 'combat': renderCombat(); break;
+    case 'launder': renderLaunder(); break;
+    case 'profile': renderProfile(); break;
+    case 'vehicles': renderVehicles(); break;
+    case 'vip': renderVIP(); break;
+  }
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+  renderTab(tab);
+  renderAll();
+}
+
+// ===== VEHICLES =====
+function renderVehicles() {
+  const listEl = document.getElementById('vehicleList');
+  if (!listEl) return;
+  listEl.innerHTML = VEHICLES_DATA.map(v => {
+    const owned = G.ownedVehicles.includes(v.id);
+    const active = G.activeVehicle === v.id;
+    const isVipItem = ['ghost_helo','bulletproof_car'].includes(v.id);
+    return `<div style="background:var(--panel2);border:1px solid ${active ? 'var(--accent)' : owned ? 'var(--green)' : 'var(--border)'};padding:12px;position:relative">
+      ${active ? '<div style="position:absolute;top:4px;right:6px;font-size:9px;color:var(--accent);font-weight:700;letter-spacing:1px">ACTIVE</div>' : ''}
+      <div style="font-size:28px;text-align:center;margin-bottom:6px">${v.emoji}</div>
+      <div style="font-family:Oswald,sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;margin-bottom:3px">${v.name}</div>
+      <div style="color:var(--muted);font-size:11px;margin-bottom:6px;line-height:1.4">${v.desc}</div>
+      <div style="font-size:10px;margin-bottom:6px;color:#aaa">
+        🏎️ Speed: ${'▓'.repeat(Math.min(v.speed,10))}${'░'.repeat(Math.max(0,10-v.speed))}<br>
+        📦 Capacity: +${v.capacity}<br>
+        🚔 Escape: ${v.escape}%
+      </div>
+      <div style="font-size:10px;color:var(--accent);margin-bottom:8px;line-height:1.5">${v.bonus}</div>
+      ${owned
+        ? `<button class="btn btn-sm ${active ? '' : 'btn-green'}" onclick="setActiveVehicle('${v.id}')" ${active ? 'disabled' : ''}>${active ? 'IN USE' : 'SET ACTIVE'}</button>`
+        : `<div style="color:var(--green);font-size:12px;font-weight:700;margin-bottom:4px">${fmt(v.cost)}</div>
+           <button class="btn btn-sm" onclick="buyVehicle('${v.id}')" ${G.cash < v.cost ? 'disabled' : ''}>BUY</button>`
+      }
+    </div>`;
+  }).join('');
+
+  const activeEl = document.getElementById('activeVehicleDisplay');
+  if (activeEl) {
+    const v = VEHICLES_DATA.find(x => x.id === G.activeVehicle) || VEHICLES_DATA[0];
+    activeEl.innerHTML = `<div style="display:flex;gap:16px;align-items:center">
+      <div style="font-size:48px">${v.emoji}</div>
+      <div>
+        <div style="font-family:Oswald,sans-serif;font-size:18px;color:var(--accent);font-weight:700">${v.name}</div>
+        <div style="font-size:12px;color:var(--muted);margin:4px 0">${v.desc}</div>
+        <div style="font-size:12px;color:#aaa">${v.bonus}</div>
+        <div style="font-size:11px;margin-top:6px">🏎️ Speed: ${v.speed}/10 &nbsp;|&nbsp; 📦 +${v.capacity} capacity &nbsp;|&nbsp; 🚔 ${v.escape}% escape</div>
+      </div>
+    </div>`;
+  }
+}
+
+function buyVehicle(id) {
+  const v = VEHICLES_DATA.find(x => x.id === id);
+  if (!v) return;
+  if (G.ownedVehicles.includes(id)) { notify('Already owned!', ''); return; }
+  if (G.cash < v.cost) { notify('Not enough cash!', 'bad'); return; }
+  G.cash -= v.cost;
+  G.ownedVehicles.push(id);
+  addXP(500);
+  addRespect(v.status * 20);
+  addLog(`🚗 Purchased ${v.name} for ${fmt(v.cost)}`, 'good');
+  notify(`🚗 ${v.name} added to your fleet!`, 'good');
+  checkAchievements();
+  renderAll();
+}
+
+function setActiveVehicle(id) {
+  G.activeVehicle = id;
+  const v = VEHICLES_DATA.find(x => x.id === id);
+  notify(`🚗 Now driving: ${v.name}`, '');
+  renderVehicles();
+}
+
+// ===== VIP SYSTEM =====
+function activateVIP() {
+  const key = document.getElementById('vipKeyInput').value.trim();
+  if (key === 'CartelSim2627') {
+    G.vipActive = true;
+    document.getElementById('vipStatusMsg').innerHTML = '✅ VIP ACTIVATED — Welcome to the inner circle.';
+    document.getElementById('vipStatusMsg').style.color = 'var(--green)';
+    document.getElementById('vipLockedMsg').style.display = 'none';
+    document.getElementById('vipContent').style.display = 'block';
+    document.getElementById('navVip').style.color = '#9b59b6';
+    document.getElementById('navVip').style.borderBottomColor = '#9b59b6';
+    notify('⭐ VIP ACTIVATED! Exclusive items and perks unlocked!', 'warn');
+    addLog('⭐ VIP Membership activated — inner circle access granted', 'warn');
+    G.vipXP += 100;
+    checkVIPLevel();
+    checkAchievements();
+    renderVIP();
+  } else {
+    notify('❌ Invalid VIP key! Purchase key: CartelSim2627', 'bad');
+    document.getElementById('vipStatusMsg').textContent = '❌ Invalid key. Purchase the correct key to activate.';
+    document.getElementById('vipStatusMsg').style.color = 'var(--red)';
+  }
+}
+
+function checkVIPLevel() {
+  if (!G.vipActive) return;
+  const thresholds = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500];
+  let newLevel = 0;
+  for (let i = 0; i < thresholds.length; i++) {
+    if (G.vipXP >= thresholds[i]) newLevel = i;
+    else break;
+  }
+  if (newLevel > G.vipLevel) {
+    G.vipLevel = newLevel;
+    const perk = VIP_PERKS.find(p => p.level === newLevel);
+    if (perk) {
+      notify(`⭐ VIP LEVEL UP! Level ${newLevel} — ${perk.name}`, 'warn');
+      addLog(`⭐ VIP Level ${newLevel} reached: ${perk.name}`, 'warn');
+    }
+  }
+}
+
+function claimVIPItem(id) {
+  if (!G.vipActive) { notify('Activate VIP first!', 'bad'); return; }
+  const item = VIP_ITEMS.find(x => x.id === id);
+  if (!item) return;
+  if (G.vipOwnedItems.includes(id)) { notify('Already claimed!', ''); return; }
+  if (G.vipXP < item.vpCost) { notify(`Need ${item.vpCost} VIP Points! You have ${G.vipXP}.`, 'bad'); return; }
+  G.vipXP -= item.vpCost;
+  G.vipOwnedItems.push(id);
+  // Apply item effects
+  if (item.effect === 'vehicle' && id === 'ghost_helo') { G.ownedVehicles.push('helicopter'); }
+  if (item.effect === 'vehicle' && id === 'bulletproof_car') { G.ownedVehicles.push('ferrari'); }
+  if (item.effect === 'crew_bonus') { G.crew.enforcer = (G.crew.enforcer || 0) + 20; }
+  if (item.effect === 'launder_max') { G.launderMaxPerDay += 500000; G.launderRate = 0.98; }
+  notify(`⭐ VIP Item Claimed: ${item.name}!`, 'warn');
+  addLog(`⭐ VIP: Claimed ${item.name}`, 'warn');
+  checkAchievements();
+  renderVIP();
+  renderAll();
+}
+
+function renderVIP() {
+  const contentEl = document.getElementById('vipContent');
+  if (!contentEl || !G.vipActive) return;
+
+  // Level display
+  const levelEl = document.getElementById('vipLevelDisplay');
+  if (levelEl) {
+    const thresholds = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500];
+    const nextThresh = thresholds[G.vipLevel + 1] || 9999;
+    const pct = Math.min(100, ((G.vipXP - (thresholds[G.vipLevel]||0)) / ((nextThresh - (thresholds[G.vipLevel]||0)))) * 100);
+    const currentPerk = VIP_PERKS.find(p => p.level === G.vipLevel);
+    levelEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px">
+        <div style="font-family:Bebas Neue,cursive;font-size:52px;color:#9b59b6;line-height:1">${G.vipLevel}</div>
+        <div style="flex:1">
+          <div style="color:#9b59b6;font-family:Oswald,sans-serif;font-size:14px;font-weight:700;text-transform:uppercase">${currentPerk ? currentPerk.name : 'VIP Initiate'}</div>
+          <div style="font-size:11px;color:var(--muted);margin:3px 0">VIP Points: ${G.vipXP} / ${nextThresh}</div>
+          <div style="background:var(--bg);height:6px;border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#9b59b6,#3498db);width:${pct}%;transition:width 0.4s"></div></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">Earn VIP Points by playing: +10 per achievement, +5 per mission, +1 per drug sale. Max VIP Level: 10.</div>`;
+  }
+
+  // Items grid
+  const itemsEl = document.getElementById('vipItemsGrid');
+  if (itemsEl) {
+    itemsEl.innerHTML = VIP_ITEMS.map(item => {
+      const owned = G.vipOwnedItems.includes(item.id);
+      const canAfford = G.vipXP >= item.vpCost;
+      return `<div style="background:#1a0a2e;border:1px solid ${owned ? 'var(--green)' : '#9b59b6'};padding:14px;position:relative">
+        ${owned ? '<div style="position:absolute;top:4px;right:6px;font-size:9px;color:var(--green);font-weight:700">OWNED</div>' : ''}
+        <div style="font-size:28px;text-align:center;margin-bottom:8px">${item.emoji}</div>
+        <div style="font-family:Oswald,sans-serif;font-size:13px;color:#b39ddb;font-weight:700;text-transform:uppercase;margin-bottom:4px">${item.name}</div>
+        <div style="color:var(--muted);font-size:11px;margin-bottom:8px;line-height:1.5">${item.desc}</div>
+        <div style="color:#9b59b6;font-size:12px;font-weight:700;margin-bottom:6px">⭐ ${item.vpCost} VIP Points</div>
+        ${owned
+          ? `<button class="btn btn-sm" disabled style="border-color:var(--green);color:var(--green)">CLAIMED</button>`
+          : `<button class="btn btn-sm" onclick="claimVIPItem('${item.id}')" ${canAfford ? '' : 'disabled'} style="border-color:#9b59b6;color:#9b59b6">CLAIM</button>`
+        }
+      </div>`;
+    }).join('');
+  }
+
+  // Perks display
+  const perksEl = document.getElementById('vipPerksDisplay');
+  if (perksEl) {
+    perksEl.innerHTML = VIP_PERKS.map(p => {
+      const active = G.vipLevel >= p.level;
+      return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <span style="color:${active ? '#9b59b6' : 'var(--muted)'}">${active ? '✅' : '🔒'} <b>VIP ${p.level}:</b> ${p.name}</span>
+        <div style="font-size:10px;color:${active ? '#aaa' : 'var(--muted)'};padding-left:18px">${p.desc}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// Hook VIP XP gains into existing actions
+const _origAddXP = addXP;
+function addXP(amount) {
+  _origAddXP(amount);
+  if (G.vipActive) {
+    G.vipXP += Math.floor(amount / 50);
+    checkVIPLevel();
+  }
+}
+
+// ===== GAME LOOP =====
+let marketTimer = 30;
+let incomeTimer = 60;
+let dayTimer = 120;
+let contestTimer = 45;
+
+setInterval(() => {
+  marketTimer--;
+  incomeTimer--;
+  dayTimer--;
+  contestTimer--;
+
+  document.getElementById('marketCountdown').textContent = marketTimer + 's';
+  document.getElementById('incomeCountdown').textContent = incomeTimer + 's';
+
+  if (marketTimer <= 0) {
+    marketTimer = 30;
+    updateMarketPrices();
+  }
+
+  if (incomeTimer <= 0) {
+    incomeTimer = 60;
+    // Territory income
+    const terrInc = getTerritoryIncome();
+    if (terrInc > 0) {
+      G.cash += terrInc;
+      G.totalEarnings += terrInc;
+      addLog(`Territory income: +${fmt(terrInc)}`, 'good');
+    }
+    // Crew income
+    const crewInc = Object.entries(G.crew).reduce((acc, [id, count]) => {
+      const ct = CREW_TYPES.find(c => c.id === id);
+      return acc + (ct?.income || 0) * count;
+    }, 0);
+    if (crewInc > 0) {
+      G.cash += crewInc;
+      G.totalEarnings += crewInc;
+      addLog(`Crew income: +${fmt(crewInc)}`, 'good');
+    }
+    // Property income
+    const propInc = G.ownedProperties.reduce((acc, pid) => {
+      const p = PROPERTIES.find(x => x.id === pid);
+      return acc + (p?.incomePerDay || 0);
+    }, 0);
+    if (propInc > 0) {
+      G.cash += propInc;
+      G.totalEarnings += propInc;
+      addLog(`Property income: +${fmt(propInc)}`, 'good');
+    }
+
+    // VIP money printer
+    if (G.vipActive && G.vipOwnedItems.includes('money_printer')) {
+      G.cash += 8000; G.totalEarnings += 8000;
+      addLog('⭐ VIP Money Printer: +$8,000', 'good');
+    }
+    // VIP El Chapo daily shipment (once per day)
+    if (G.vipActive && G.vipOwnedItems.includes('el_chapo_deal') && G.day > 1) {
+      const shipDrug = DRUGS[Math.floor(Math.random() * DRUGS.length)];
+      const qty = 30;
+      G.inventory[shipDrug.id] = (G.inventory[shipDrug.id] || 0) + qty;
+      addLog(`⭐ El Chapo shipment: +${qty}x ${shipDrug.name}`, 'good');
+    }
+
+    updateHeader();
+    checkAchievements();
+  }
+
+  if (dayTimer <= 0) {
+    dayTimer = 120;
+    G.day++;
+    G.launderToday = 0;
+
+    // Pay wages
+    const wages = getDailyWages();
+    if (wages > 0) {
+      if (G.cash >= wages) {
+        G.cash -= wages;
+        addLog(`Paid crew wages: -${fmt(wages)}`, 'bad');
+      } else if (G.bank >= wages) {
+        G.bank -= wages;
+        addLog(`Paid wages from bank: -${fmt(wages)}`, 'bad');
+      } else {
+        // Can't pay wages — crew loyalty drops
+        addLog(`⚠️ Couldn't pay wages! Crew loyalty dropping!`, 'bad');
+        notify('⚠️ Can\'t pay wages! Crew may betray you!', 'bad');
+        // Fire a random crew member
+        const crewKeys = Object.keys(G.crew).filter(k => G.crew[k] > 0);
+        if (crewKeys.length > 0) {
+          const k = crewKeys[Math.floor(Math.random() * crewKeys.length)];
+          G.crew[k]--;
+          if (G.crew[k] === 0) delete G.crew[k];
+          const ct = CREW_TYPES.find(c => c.id === k);
+          addLog(`${ct.name} deserted due to unpaid wages!`, 'bad');
+        }
+      }
+    }
+
+    // Heat reduction from crew
+    let heatReduce = 0;
+    Object.entries(G.crew).forEach(([id, count]) => {
+      const ct = CREW_TYPES.find(c => c.id === id);
+      if (ct?.heatReduce) heatReduce += ct.heatReduce * count;
+    });
+    G.ownedProperties.forEach(pid => {
+      const p = PROPERTIES.find(x => x.id === pid);
+      if (p?.heatReduce) heatReduce += p.heatReduce;
+    });
+    if (G.ownedWeapons.drone) heatReduce += 2;
+    if (G.ownedWeapons.silencer_kit) heatReduce += 3;
+    if (heatReduce > 0) addHeat(-heatReduce);
+
+    // Natural heat decay
+    addHeat(-2);
+
+    addLog(`--- Day ${G.day} begins ---`, 'info');
+
+    // Contested territories randomly
+    Object.keys(G.territories).forEach(id => {
+      if (G.territories[id] === 'owned' && Math.random() < 0.1) {
+        G.territories[id] = 'contested';
+        const t = TERRITORIES.find(x => x.id === id);
+        notify(`⚔️ ${t.name} is being contested! Defend it!`, 'warn');
+        addLog(`Territory contested: ${t.name}`, 'warn');
+      }
+    });
+
+    updateHeader();
+  }
+
+  if (contestTimer <= 0) {
+    contestTimer = 45;
+    // Auto-lose contested territories if not defended
+    Object.entries(G.territories).forEach(([id, state]) => {
+      if (state === 'contested' && Math.random() < 0.4) {
+        delete G.territories[id];
+        const t = TERRITORIES.find(x => x.id === id);
+        addLog(`Lost contested territory: ${t.name}`, 'bad');
+      }
+    });
+  }
+
+}, 1000);
+
+// ===== INIT =====
+updateMarketPrices();
+updateTicker();
+renderAll();
+addLog('🎮 Welcome to Cartel Empire! Buy drugs cheap, sell high, build your empire.', 'info');
+addLog('💡 TIP: Start by buying weed or pills, flip for profit, then invest in crew & territory.', 'info');
+addLog('💡 TIP: Use the Lab tab to manufacture drugs from raw materials for bigger profits.', 'info');
+</script>
+</body>
+</html>
